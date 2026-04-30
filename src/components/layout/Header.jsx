@@ -17,7 +17,6 @@ export default function Header() {
   const navigate  = useNavigate()
   const location  = useLocation()
   const [scrolled, setScrolled] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
   const isHome = location.pathname === '/'
 
   useEffect(() => {
@@ -25,12 +24,7 @@ export default function Header() {
     if (!pageContent) return
 
     const handleScroll = () => {
-      const st = pageContent.scrollTop
-      setScrolled(st > 20)
-      
-      // Calculate opacity progress (0 to 1 over first 80px of scroll)
-      const progress = Math.min(st / 80, 1)
-      setScrollProgress(progress)
+      setScrolled(pageContent.scrollTop > 20)
     }
 
     pageContent.addEventListener('scroll', handleScroll, { passive: true })
@@ -41,18 +35,8 @@ export default function Header() {
 
   const greeting = getGreeting()
 
-  // Dynamic opacity: transparent if on home and not scrolled, fully opaque on other pages
-  const bgOpacity = isHome ? scrollProgress * 0.95 : 0.95;
-  const blurAmount = isHome ? scrollProgress * 24 : 24;
-
   return (
-    <header 
-      className={`app-header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}
-      style={{
-        '--bg-opacity': bgOpacity,
-        '--blur-amount': `${blurAmount}px`
-      }}
-    >
+    <header className={`app-header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
       <div className="header-top-row">
         {/* Left: Logo + level */}
         <button className="header-brand" onClick={() => navigate('/')}>
@@ -88,21 +72,19 @@ export default function Header() {
       </div>
 
       {isHome && (
-        <div className="header-greeting-wrapper">
-          <div className="header-greeting-row">
-            <div className="greeting-text-wrap">
-              <p className="greeting-sub">{greeting.text} {greeting.emoji}</p>
-              <h1 className="greeting-name">
-                {user?.name?.split(' ')[0] || 'Sahabat'} <span className="greeting-wave">👋</span>
-              </h1>
-              <p className="greeting-tagline">Mau minum apa hari ini?</p>
-            </div>
-            <div className="greeting-badge">
-              <span className="greeting-pts-icon">🌟</span>
-              <div>
-                <p className="greeting-pts-val">{user?.points ?? 0}</p>
-                <p className="greeting-pts-label">points</p>
-              </div>
+        <div className="header-greeting-row">
+          <div className="greeting-text-wrap">
+            <p className="greeting-sub">{greeting.text} {greeting.emoji}</p>
+            <h1 className="greeting-name">
+              {user?.name?.split(' ')[0] || 'Sahabat'} <span className="greeting-wave">👋</span>
+            </h1>
+            <p className="greeting-tagline">Mau minum apa hari ini?</p>
+          </div>
+          <div className="greeting-badge">
+            <span className="greeting-pts-icon">🌟</span>
+            <div>
+              <p className="greeting-pts-val">{user?.points ?? 0}</p>
+              <p className="greeting-pts-label">points</p>
             </div>
           </div>
         </div>

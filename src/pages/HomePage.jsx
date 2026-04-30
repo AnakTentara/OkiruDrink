@@ -29,10 +29,10 @@ export default function HomePage() {
     <>
       <Header />
       <main className="page-content">
-        <div style={{ height: 16 }} />
+        <div style={{ height: 40 }} />
         <motion.div variants={stagger} initial="hidden" animate="show">
           {/* ── Hero Carousel ── */}
-          <motion.div variants={section} style={{ marginTop: 0 }}>
+          <motion.div variants={section} style={{ marginTop: 4 }}>
             <HeroCarousel />
           </motion.div>
 
