@@ -5,8 +5,8 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: var(--header-h); /* 104px (60px content + 44px safe area) */
-  padding-top: 44px; /* iOS Safe Area Top to prevent overlapping notch */
+  height: var(--header-h); /* 84px */
+  padding-top: 24px; /* Reduced safe area top */
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -20,8 +20,9 @@
 }
 
 .app-header.is-home {
-  height: 180px; /* 136px content + 44px safe area */
+  height: 160px; /* 136px content + 24px safe area */
   justify-content: flex-start;
+  padding-top: 12px;
 }
 
 .app-header.scrolled {
