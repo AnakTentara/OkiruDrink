@@ -46,8 +46,8 @@
   --transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  --header-h:     64px;
-  --nav-h:        72px;
+  --header-h:     108px; /* 64px + 44px safe area top */
+  --nav-h:        96px;  /* 72px + 24px safe area bottom */
   --max-w:        430px;
   --phone-h:      812px;
 }
@@ -342,7 +342,7 @@ body {
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  border-radius: 36px;
+  border-radius: 40px; /* Geometrically precise: 52px frame - 12px padding */
   transform: translateZ(0); /* IMPORTANT: creates a containing block for absolute descendants */
 }
 
@@ -351,7 +351,7 @@ body {
   height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
-  padding-top: calc(84px + 8px); /* 84px is the tall header height */
+  padding-top: calc(var(--header-h) + 8px);
   padding-bottom: calc(var(--nav-h) + 16px);
   scroll-behavior: smooth;
 }

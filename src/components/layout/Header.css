@@ -5,7 +5,8 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: 84px; /* Default for non-home */
+  height: var(--header-h); /* 104px (60px content + 44px safe area) */
+  padding-top: 44px; /* iOS Safe Area Top to prevent overlapping notch */
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -19,17 +20,15 @@
 }
 
 .app-header.is-home {
-  height: 148px; /* Expanded height for Home */
+  height: 180px; /* 136px content + 44px safe area */
   justify-content: flex-start;
-  padding-top: 12px;
 }
 
 .app-header.scrolled {
-  height: var(--header-h); /* 60px */
+  height: var(--header-h); /* 104px */
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid rgba(155, 196, 56, 0.18);
   box-shadow: 0 2px 20px rgba(0,0,0,0.05), 0 1px 0 rgba(155,196,56,0.1);
-  padding-top: 0;
   justify-content: center;
 }
 
