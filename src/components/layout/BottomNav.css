@@ -5,29 +5,59 @@
   left: 0;
   right: 0;
   width: 100%;
-  height: var(--nav-h); /* 88px */
-  padding-bottom: 24px; /* iOS Safe Area */
+  height: var(--nav-h); /* 74px */
   background: #ffffff;
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+  align-items: stretch;
   z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-  border-radius: 20px 20px 0 0; /* Optional: rounded top corners */
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+  border-radius: 24px 24px 0 0;
 }
 
-/* The protruding ball using var(--bg) to blend as a cut-out */
-.nav-ball {
+/* The transparent crater matching page background */
+.nav-crater {
   position: absolute;
-  top: -24px; /* Protrude above the navbar */
+  top: -36px; /* 48px circle, overlaps navbar by 12px */
+  left: 50%;
+  margin-left: -24px;
+  width: 48px;
+  height: 48px;
+  background: var(--bg);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.nav-crater::before,
+.nav-crater::after {
+  content: '';
+  position: absolute;
+  top: 36px;
+  width: 16px;
+  height: 16px;
+  background: transparent;
+}
+
+.nav-crater::before {
+  left: -16px;
+  border-top-right-radius: 16px;
+  box-shadow: 6px -6px 0 0 var(--bg);
+}
+
+.nav-crater::after {
+  right: -16px;
+  border-top-left-radius: 16px;
+  box-shadow: -6px -6px 0 0 var(--bg);
+}
+
+.nav-crater-dot {
+  position: absolute;
+  bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 56px;
-  height: 56px;
-  background: var(--primary);
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  border: 6px solid var(--bg); /* Creates the "cut-out" illusion */
-  z-index: 0;
+  background: var(--primary-dark);
 }
 
 .nav-item {
@@ -43,6 +73,8 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   color: var(--neutral-400);
+  padding-bottom: 12px; /* Bottom safe area on items */
+  z-index: 2;
 }
 
 .nav-icon-wrapper {
@@ -51,31 +83,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  margin-bottom: 2px;
+  color: var(--neutral-400);
+  transition: color 0.3s;
 }
 
-.nav-icon {
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s;
-}
-
-.nav-item.active .nav-icon {
-  color: #fff;
-  transform: translateY(-28px);
+.nav-item.active .nav-icon-wrapper {
+  color: var(--primary-dark);
 }
 
 .nav-label {
-  position: absolute;
-  bottom: 12px; /* Above the safe area padding */
   font-size: 11px;
-  font-weight: 800;
-  color: var(--primary-dark);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  color: inherit;
+  transition: all 0.3s;
 }
 
 .nav-item.active .nav-label {
-  opacity: 1;
-  transform: translateY(0);
+  color: var(--primary-dark);
+  font-weight: 800;
 }
