@@ -392,10 +392,9 @@ body {
 
   .app-shell {
     width: 100%;
-    height: auto;
-    min-height: 100dvh;
+    height: 100dvh;
     border-radius: 0;
-    overflow-y: visible;
+    overflow: hidden;
   }
 
   .page-content {
