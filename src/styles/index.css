@@ -46,8 +46,8 @@
   --transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  --header-h:     108px; /* 64px + 44px safe area top */
-  --nav-h:        96px;  /* 72px + 24px safe area bottom */
+  --header-h:     84px; /* 60px + 24px safe area top */
+  --nav-h:        88px;  /* 64px floating nav + 24px bottom gap */
   --max-w:        430px;
   --phone-h:      812px;
 }
