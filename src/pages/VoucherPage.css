@@ -1,6 +1,21 @@
-.voucher-page-header { padding: 16px 0 12px; }
-.voucher-page-header h2 { margin-bottom: 4px; }
-
+.voucher-page-header { 
+  padding: 24px 0 16px; 
+  text-align: center;
+}
+.voucher-page-header h2 { 
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 6px; 
+  color: var(--primary-dark);
+  background: linear-gradient(135deg, var(--primary-dark), #9BC438);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.voucher-page-header p {
+  font-size: 13px;
+  color: var(--neutral-400);
+  font-weight: 500;
+}
 .voucher-list {
   display: flex;
   flex-direction: column;

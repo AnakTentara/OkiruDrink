@@ -35,7 +35,7 @@ export default function QuickActions() {
             onClick={() => navigate(path)}
           >
             <div className="action-icon" style={{ background: bg }}>
-              <Icon size={22} color={color} strokeWidth={2} />
+              <Icon size={28} color={color} strokeWidth={2} />
             </div>
             <span className="action-label">{label}</span>
           </motion.button>
