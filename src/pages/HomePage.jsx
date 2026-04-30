@@ -20,43 +20,16 @@ const stagger = {
   show:   { transition: { staggerChildren: 0.09 } }
 }
 
-// Get time-based greeting
-function getGreeting() {
-  const h = new Date().getHours()
-  if (h < 11) return { text: 'Selamat Pagi', emoji: '☀️' }
-  if (h < 15) return { text: 'Selamat Siang', emoji: '🌤️' }
-  if (h < 18) return { text: 'Selamat Sore', emoji: '🌅' }
-  return { text: 'Selamat Malam', emoji: '🌙' }
-}
+
 
 export default function HomePage() {
   const { user } = useUser()
-  const greeting = getGreeting()
 
   return (
     <>
       <Header />
       <main className="page-content">
         <motion.div variants={stagger} initial="hidden" animate="show">
-
-          {/* ── Greeting Banner ── */}
-          <motion.div variants={section} className="home-greeting">
-            <div className="greeting-text-wrap">
-              <p className="greeting-sub">{greeting.text} {greeting.emoji}</p>
-              <h1 className="greeting-name">
-                {user?.name?.split(' ')[0] || 'Sahabat'} <span className="greeting-wave">👋</span>
-              </h1>
-              <p className="greeting-tagline">Mau minum apa hari ini?</p>
-            </div>
-            <div className="greeting-badge">
-              <span className="greeting-pts-icon">🌟</span>
-              <div>
-                <p className="greeting-pts-val">{user?.points ?? 0}</p>
-                <p className="greeting-pts-label">points</p>
-              </div>
-            </div>
-          </motion.div>
-
           {/* ── Hero Carousel ── */}
           <motion.div variants={section} style={{ marginTop: 4 }}>
             <HeroCarousel />
