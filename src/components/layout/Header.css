@@ -19,6 +19,8 @@
 
 .app-header.is-home {
   height: 140px; 
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
 }
 
 .app-header.scrolled {

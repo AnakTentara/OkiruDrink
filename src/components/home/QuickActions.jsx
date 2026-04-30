@@ -1,13 +1,13 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { ShoppingBag, Truck, UtensilsCrossed, Gift } from 'lucide-react'
+import { ShoppingBag, Truck, Coffee, Gift } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import './QuickActions.css'
 
 const actions = [
   { icon: ShoppingBag, label: 'Order',        color: '#9BC438', bg: '#EFF8D6', path: '/menu' },
   { icon: Truck,       label: 'Promo Sehat',  color: '#F5A623', bg: '#FEF3CD', path: '/voucher' },
-  { icon: UtensilsCrossed, label: 'Catering', color: '#6C8EBF', bg: '#E8F0FB', path: '/menu' },
+  { icon: Coffee,      label: 'Menu',         color: '#6C8EBF', bg: '#E8F0FB', path: '/menu' },
   { icon: Gift,        label: 'Event',        color: '#E05252', bg: '#FFE5E5', path: '/voucher' },
 ]
 
