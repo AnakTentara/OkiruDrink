@@ -1,0 +1,64 @@
+.voucher-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #FFFBEC 0%, #FFF3CD 60%, #FFEBB0 100%);
+  border: 1.5px solid rgba(245,166,35,0.35);
+  border-radius: var(--radius-md);
+  padding: 16px 16px;
+  gap: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(245,166,35,0.12);
+}
+
+/* Sparkle decorations */
+.voucher-banner::before {
+  content: '✨';
+  position: absolute;
+  font-size: 48px;
+  right: -8px;
+  top: -8px;
+  opacity: 0.12;
+  pointer-events: none;
+  transform: rotate(15deg);
+}
+
+.voucher-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.voucher-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(245,166,35,0.4);
+}
+
+.voucher-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--neutral-900);
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+.voucher-sub {
+  font-size: 11px;
+  color: var(--neutral-600);
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.voucher-claim-btn {
+  flex-shrink: 0;
+  animation: pulse-ring 2s infinite;
+}

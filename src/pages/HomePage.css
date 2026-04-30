@@ -1,0 +1,95 @@
+/* ── Greeting Banner ── */
+.home-greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  background: linear-gradient(135deg, var(--primary-xlight) 0%, #fff 100%);
+  border-bottom: 1px solid var(--primary-light);
+  position: relative;
+  overflow: hidden;
+}
+.home-greeting::before {
+  content: '🍃';
+  position: absolute;
+  right: 80px;
+  top: -4px;
+  font-size: 48px;
+  opacity: 0.08;
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+
+.greeting-text-wrap { flex: 1; min-width: 0; }
+.greeting-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-400);
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+.greeting-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--neutral-900);
+  line-height: 1.2;
+  margin-bottom: 2px;
+  letter-spacing: -0.3px;
+}
+.greeting-wave { display: inline-block; animation: wave 2s ease-in-out infinite; }
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25%       { transform: rotate(20deg); }
+  75%       { transform: rotate(-10deg); }
+}
+.greeting-tagline {
+  font-size: 12px;
+  color: var(--neutral-400);
+  font-weight: 500;
+}
+
+.greeting-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--primary-light);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.greeting-pts-icon { font-size: 20px; }
+.greeting-pts-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+.greeting-pts-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--neutral-400);
+  margin-top: 1px;
+}
+
+/* ── Section Divider ── */
+.home-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 12px;
+}
+.hsd-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neutral-200), transparent);
+}
+.hsd-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--neutral-400);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}

@@ -1,0 +1,124 @@
+.loyalty-card {
+  background: linear-gradient(145deg, #F0FBDA 0%, #E4F5C8 60%, #D8EFBA 100%);
+  border: 1.5px solid rgba(155,196,56,0.35);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(155,196,56,0.1);
+}
+
+/* Decorative circle bg */
+.loyalty-card::before {
+  content: '';
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(155,196,56,0.1);
+  right: -40px;
+  top: -40px;
+  pointer-events: none;
+}
+.loyalty-card::after {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(155,196,56,0.08);
+  left: -20px;
+  bottom: -20px;
+  pointer-events: none;
+}
+
+.loyalty-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 1;
+}
+.loyalty-title { font-size: 15px; font-weight: 800; color: var(--neutral-900); }
+.loyalty-desc  { font-size: 12px; color: var(--neutral-600); margin-top: 2px; line-height: 1.5; }
+.loyalty-expiry {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  white-space: nowrap;
+  margin-top: 2px;
+  background: rgba(155,196,56,0.15);
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+.loyalty-note  { font-size: 11px; color: var(--neutral-400); margin-bottom: 14px; position: relative; z-index: 1; }
+
+.stamps-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.stamp {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+  transition: transform 0.2s;
+}
+.stamp:active { transform: scale(0.9); }
+
+.stamp-inner-empty,
+.stamp-inner-filled,
+.stamp-free-inner {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.stamp-inner-empty {
+  border: 2px dashed rgba(155,196,56,0.4);
+  background: rgba(255,255,255,0.7);
+}
+.stamp:hover .stamp-inner-empty {
+  border-color: var(--primary);
+  background: rgba(255,255,255,0.9);
+}
+
+.stamp-inner-filled {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  box-shadow: 0 4px 12px rgba(155,196,56,0.4);
+}
+
+.stamp-free-inner {
+  border: 2px solid var(--primary-light);
+  background: rgba(255,255,255,0.6);
+}
+.stamp-free-active .stamp-free-inner {
+  background: linear-gradient(135deg, #FFF3CD, #FEF9E7);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(245,166,35,0.3);
+  animation: pulse-ring 1.5s infinite;
+}
+.stamp-free { cursor: default; }
+
+.stamp-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--neutral-500, #777);
+  letter-spacing: 0.2px;
+}
+.free-label { color: var(--primary-dark); }
