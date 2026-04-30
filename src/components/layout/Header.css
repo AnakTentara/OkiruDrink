@@ -6,8 +6,8 @@
   right: 0;
   width: 100%;
   height: var(--header-h); /* 84px */
-  padding-top: 24px; /* Reduced safe area top */
-  background: rgba(255, 255, 255, 0.7);
+  padding-top: 24px; /* Safe area top */
+  background: rgba(255, 255, 255, 0.85); /* Increased opacity for readability */
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid transparent;
@@ -22,7 +22,7 @@
 .app-header.is-home {
   height: 160px; /* 136px content + 24px safe area */
   justify-content: flex-start;
-  padding-top: 12px;
+  padding-top: 24px; /* Fix: Overriden notch overlap */
 }
 
 .app-header.scrolled {

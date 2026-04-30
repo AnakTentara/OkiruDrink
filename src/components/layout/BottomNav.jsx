@@ -26,20 +26,15 @@ export default function BottomNav() {
             className={`nav-item ${isActive ? 'active' : ''}`}
             onClick={() => navigate(item.path)}
           >
-            <div className="nav-icon-wrapper">
+            {isActive && (
               <motion.div
-                animate={{ y: isActive ? -2 : 0 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-              >
-                <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className="nav-icon" />
-              </motion.div>
-              {isActive && (
-                <motion.div
-                  layoutId="nav-bubble"
-                  className="nav-bubble"
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                />
-              )}
+                layoutId="nav-ball"
+                className="nav-ball"
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              />
+            )}
+            <div className="nav-icon-wrapper">
+              <Icon size={24} strokeWidth={isActive ? 2.5 : 2} className="nav-icon" />
             </div>
             <span className="nav-label">{item.label}</span>
           </button>
