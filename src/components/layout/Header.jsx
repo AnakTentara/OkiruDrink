@@ -43,9 +43,9 @@ export default function Header() {
         const h = HOME_H - ratio * (HOME_H - BASE_H)
         headerEl.style.height = h + 'px'
 
-        // Border-radius bawah: 24px → 0px
+        // Border-radius: hanya bawah yang rounded (atas flat)
         const br = Math.round(24 * (1 - ratio))
-        headerEl.style.borderRadius = `40px 40px ${br}px ${br}px`
+        headerEl.style.borderRadius = `0 0 ${br}px ${br}px`
 
         // Box shadow muncul seiring scroll
         if (ratio > 0.02) {
