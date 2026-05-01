@@ -202,3 +202,42 @@
 }
 .vc-use-btn:active { opacity: 0.8; }
 .vc-use-btn:disabled { cursor: not-allowed; box-shadow: none; }
+
+/* ── Syarat & Ketentuan ── */
+.vc-terms-section {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* Reset position for terms if needed */
+  position: relative;
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+.vc-terms-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 0 0;
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  background: none;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--neutral-400);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+}
+.vc-terms-toggle:active { color: var(--primary-dark); }
+.vc-terms-content {
+  overflow: hidden;
+}
+.vc-terms-content p {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--neutral-600);
+  padding: 8px 0 4px;
+}

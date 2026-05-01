@@ -1,0 +1,139 @@
+const express         = require('express')
+const bcrypt          = require('bcryptjs')
+const { pool }        = require('../db')
+const { requireAuth } = require('../utils/jwt')
+const { getLevelForPoints } = require('../utils/leveling')
+
+const router = express.Router()
+
+// All user routes require authentication
+router.use(requireAuth)
+
+// ── GET /api/users/me ───────────────────────────────────────
+router.get('/me', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, name, email, phone, avatar, points, stamps, level, join_date FROM users WHERE id = ?',
+      [req.user.id]
+    )
+    if (!rows.length) return res.status(404).json({ ok: false, error: 'User tidak ditemukan.' })
+    return res.json({ ok: true, user: rows[0] })
+  } catch (err) {
+    console.error('[me]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+// ── PATCH /api/users/me ─────────────────────────────────────
+router.patch('/me', async (req, res) => {
+  const { name, phone, avatar } = req.body
+  try {
+    await pool.query(
+      'UPDATE users SET name = COALESCE(?, name), phone = COALESCE(?, phone), avatar = COALESCE(?, avatar) WHERE id = ?',
+      [name || null, phone || null, avatar || null, req.user.id]
+    )
+    const [rows] = await pool.query(
+      'SELECT id, name, email, phone, avatar, points, stamps, level, join_date FROM users WHERE id = ?',
+      [req.user.id]
+    )
+    return res.json({ ok: true, user: rows[0] })
+  } catch (err) {
+    console.error('[patch me]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+// ── PATCH /api/users/me/password ───────────────────────────
+router.patch('/me/password', async (req, res) => {
+  const { currentPassword, newPassword } = req.body
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ ok: false, error: 'Password lama dan baru wajib diisi.' })
+  }
+  try {
+    const [rows] = await pool.query('SELECT password FROM users WHERE id = ?', [req.user.id])
+    const match = await bcrypt.compare(currentPassword, rows[0].password)
+    if (!match) return res.status(401).json({ ok: false, error: 'Password lama tidak sesuai.' })
+
+    const hashed = await bcrypt.hash(newPassword, 10)
+    await pool.query('UPDATE users SET password = ? WHERE id = ?', [hashed, req.user.id])
+    return res.json({ ok: true, message: 'Password berhasil diperbarui.' })
+  } catch (err) {
+    console.error('[change-pw]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+// ── GET /api/users/me/vouchers ──────────────────────────────
+router.get('/me/vouchers', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT v.*, uv.is_used, uv.used_at
+       FROM user_vouchers uv
+       JOIN vouchers v ON v.id = uv.voucher_id
+       WHERE uv.user_id = ?
+       ORDER BY uv.is_used ASC, v.expires_at ASC`,
+      [req.user.id]
+    )
+    return res.json({ ok: true, vouchers: rows })
+  } catch (err) {
+    console.error('[vouchers]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+// ── GET /api/users/me/orders ────────────────────────────────
+router.get('/me/orders', async (req, res) => {
+  try {
+    const [orders] = await pool.query(
+      'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC',
+      [req.user.id]
+    )
+    for (const order of orders) {
+      const [items] = await pool.query(
+        `SELECT oi.*, p.name, p.image
+         FROM order_items oi JOIN products p ON p.id = oi.product_id
+         WHERE oi.order_id = ?`,
+        [order.id]
+      )
+      order.items = items
+    }
+    return res.json({ ok: true, orders })
+  } catch (err) {
+    console.error('[orders]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+// ── GET /api/users/me/addresses ────────────────────────────
+router.get('/me/addresses', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id ASC',
+      [req.user.id]
+    )
+    return res.json({ ok: true, addresses: rows })
+  } catch (err) {
+    console.error('[addresses]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+// ── POST /api/users/me/addresses ───────────────────────────
+router.post('/me/addresses', async (req, res) => {
+  const { label, recipient, phone, address, city, is_default } = req.body
+  try {
+    if (is_default) {
+      await pool.query('UPDATE addresses SET is_default = 0 WHERE user_id = ?', [req.user.id])
+    }
+    const [result] = await pool.query(
+      'INSERT INTO addresses (user_id, label, recipient, phone, address, city, is_default) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [req.user.id, label || 'Rumah', recipient, phone, address, city || 'Muara Enim', is_default ? 1 : 0]
+    )
+    return res.status(201).json({ ok: true, id: result.insertId })
+  } catch (err) {
+    console.error('[add-address]', err)
+    return res.status(500).json({ ok: false, error: 'Kesalahan server.' })
+  }
+})
+
+module.exports = router

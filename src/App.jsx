@@ -33,6 +33,7 @@ import RedeemPointsPage  from './pages/RedeemPointsPage'
 import EditProfilePage   from './pages/EditProfilePage'
 import QRCodePage        from './pages/QRCodePage'
 import LocationPage      from './pages/LocationPage'
+import MemberBenefitsPage from './pages/MemberBenefitsPage'
 
 // ── Page transition variants ──
 const pageVariants = {
@@ -135,6 +136,7 @@ function AnimatedRoutes() {
         <Route path="/edit-profile"  element={<Protected><PageWrap><EditProfilePage /></PageWrap></Protected>} />
         <Route path="/qr-code"       element={<Protected><PageWrap><QRCodePage /></PageWrap></Protected>} />
         <Route path="/location"      element={<Protected><PageWrap><LocationPage /></PageWrap></Protected>} />
+        <Route path="/member-benefits" element={<Protected><PageWrap><MemberBenefitsPage /></PageWrap></Protected>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

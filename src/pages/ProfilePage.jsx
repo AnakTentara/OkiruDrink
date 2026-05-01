@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3, QrCode, Gift, Navigation, Info } from 'lucide-react'
+import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3, QrCode, Gift, Navigation, Info, Crown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
@@ -11,6 +11,7 @@ const menuItems = [
   { icon: Package,    label: 'Riwayat Pesanan',     path: '/orders' },
   { icon: MapPin,     label: 'Alamat Pengiriman',   path: '/address' },
   { icon: Star,       label: 'Program Loyalitas',   path: '/loyalty' },
+  { icon: Crown,      label: 'Keuntungan Member',   path: '/member-benefits' },
   { icon: Gift,       label: 'Tukar Poin',          path: '/redeem' },
   { icon: QrCode,     label: 'Kode QR Member',      path: '/qr-code' },
   { icon: Navigation, label: 'Ganti Lokasi Outlet', path: '/location' },

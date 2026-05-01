@@ -1,38 +1,49 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, MapPin, Truck, Tag, X, Check } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, MapPin, Truck, Tag, X, Check, ChevronRight, Clock, FileText } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useUser } from '../context/UserContext'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
+import BottomSheet from '../components/shared/BottomSheet'
 import './CartPage.css'
 
 const formatRp = (n) => `Rp ${n.toLocaleString('id-ID')}`
 
 export default function CartPage() {
   const { cart, removeItem, updateQty, clearCart } = useCart()
-  const { addOrder, addPoints } = useUser()
+  const { user, addOrder, addPoints, useVoucher } = useUser()
   const navigate = useNavigate()
   const [deliveryMode, setDeliveryMode] = useState('pickup')
-  const [promoCode, setPromoCode]       = useState('')
-  const [promoApplied, setPromoApplied] = useState(false)
-  const [promoError, setPromoError]     = useState('')
+  const [selectedVoucher, setSelectedVoucher] = useState(null)
+  const [showVoucherSheet, setShowVoucherSheet] = useState(false)
+  const [showTerms, setShowTerms] = useState(null) // voucher id whose terms are shown
 
-  const handleApplyPromo = () => {
-    if (promoCode.toLowerCase() === 'okiru2026') {
-      setPromoApplied(true)
-      setPromoError('')
-    } else {
-      setPromoError('Kode promo tidak valid')
-      setPromoApplied(false)
-    }
+  const vouchers = (user?.vouchers || []).filter(v => !v.used)
+
+  // Calculate discount from selected voucher
+  const discount = selectedVoucher
+    ? selectedVoucher.discountType === 'percent'
+      ? Math.floor(cart.totalPrice * selectedVoucher.discountValue / 100)
+      : selectedVoucher.discountValue
+    : 0
+  const finalPrice = Math.max(cart.totalPrice - discount, 0)
+
+  const handleSelectVoucher = (voucher) => {
+    if (voucher.minPurchase && cart.totalPrice < voucher.minPurchase) return
+    setSelectedVoucher(voucher)
+    setShowVoucherSheet(false)
   }
 
-  const discount = promoApplied ? Math.floor(cart.totalPrice * 0.1) : 0
-  const finalPrice = cart.totalPrice - discount
+  const handleRemoveVoucher = () => {
+    setSelectedVoucher(null)
+  }
 
   const handleCheckout = () => {
+    if (selectedVoucher) {
+      useVoucher(selectedVoucher.id)
+    }
     const order = { items: cart.items, total: finalPrice }
     navigate('/order-success', { state: { order } })
   }
@@ -142,13 +153,7 @@ export default function CartPage() {
                         >
                           <Minus size={12} />
                         </motion.button>
-                        <motion.span
-                          className="ci-qty-val"
-                          key={item.qty}
-                          initial={{ scale: 0.7 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 500 }}
-                        >{item.qty}</motion.span>
+                        <span className="ci-qty-val">{item.qty}</span>
                         <motion.button
                           className="ci-qty-btn"
                           onClick={() => updateQty(idx, item.qty + 1)}
@@ -164,43 +169,47 @@ export default function CartPage() {
               </AnimatePresence>
             </div>
 
-            {/* Promo Code */}
+            {/* Discount / Voucher Selector */}
             <div className="promo-section px-16">
-              <div className="promo-input-row">
-                <Tag size={16} className="promo-icon" />
-                <input
-                  className="promo-input"
-                  type="text"
-                  placeholder="Masukkan kode promo"
-                  value={promoCode}
-                  onChange={e => { setPromoCode(e.target.value); setPromoError(''); setPromoApplied(false); }}
-                />
-                {promoApplied ? (
-                  <span className="promo-applied"><Check size={14} /> Aktif</span>
-                ) : (
-                  <motion.button
-                    className="promo-apply-btn"
-                    onClick={handleApplyPromo}
-                    disabled={!promoCode.trim()}
-                    whileTap={{ scale: 0.95 }}
-                  >Terapkan</motion.button>
-                )}
-              </div>
-              {promoError && (
-                <motion.p
-                  className="promo-error"
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >{promoError}</motion.p>
-              )}
-              {promoApplied && (
-                <motion.p
-                  className="promo-success"
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >🎉 Diskon 10% berhasil diterapkan!</motion.p>
-              )}
-              <p className="promo-hint">Coba: <strong>OKIRU2026</strong></p>
+              <motion.button
+                className="voucher-selector-btn"
+                onClick={() => setShowVoucherSheet(true)}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="vs-left">
+                  <Tag size={18} color="var(--primary-dark)" />
+                  <div className="vs-info">
+                    {selectedVoucher ? (
+                      <>
+                        <span className="vs-title">{selectedVoucher.title}</span>
+                        <span className="vs-sub" style={{ color: 'var(--primary-dark)' }}>
+                          Hemat {selectedVoucher.discountType === 'percent'
+                            ? `${selectedVoucher.discountValue}%`
+                            : formatRp(selectedVoucher.discountValue)
+                          }
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="vs-title">Pakai Voucher</span>
+                        <span className="vs-sub">{vouchers.length} voucher tersedia</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className="vs-right">
+                  {selectedVoucher && (
+                    <motion.button
+                      className="vs-remove"
+                      onClick={(e) => { e.stopPropagation(); handleRemoveVoucher() }}
+                      whileTap={{ scale: 0.85 }}
+                    >
+                      <X size={14} />
+                    </motion.button>
+                  )}
+                  <ChevronRight size={18} color="var(--neutral-400)" />
+                </div>
+              </motion.button>
             </div>
 
             {/* Summary */}
@@ -209,13 +218,13 @@ export default function CartPage() {
                 <span>Subtotal ({cart.totalItems} item)</span>
                 <span>{formatRp(cart.totalPrice)}</span>
               </div>
-              {promoApplied && (
+              {selectedVoucher && (
                 <motion.div
                   className="cs-row cs-discount"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                 >
-                  <span>Diskon Promo</span>
+                  <span>Diskon ({selectedVoucher.code})</span>
                   <span>-{formatRp(discount)}</span>
                 </motion.div>
               )}
@@ -248,6 +257,84 @@ export default function CartPage() {
         <div style={{ height: 24 }} />
       </main>
       <BottomNav />
+
+      {/* Voucher Bottom Sheet */}
+      <AnimatePresence>
+        {showVoucherSheet && (
+          <BottomSheet
+            isOpen={showVoucherSheet}
+            onClose={() => { setShowVoucherSheet(false); setShowTerms(null) }}
+            title="Pilih Voucher"
+          >
+            {vouchers.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--neutral-400)' }}>
+                <span style={{ fontSize: 40, display: 'block', marginBottom: 12 }}>🎫</span>
+                <p style={{ fontWeight: 600 }}>Belum ada voucher tersedia</p>
+              </div>
+            ) : (
+              <div className="bs-voucher-list">
+                {vouchers.map(v => {
+                  const isEligible = !v.minPurchase || cart.totalPrice >= v.minPurchase
+                  const isSelected = selectedVoucher?.id === v.id
+                  return (
+                    <motion.div
+                      key={v.id}
+                      className={`bs-voucher-card ${isSelected ? 'bs-vc-selected' : ''} ${!isEligible ? 'bs-vc-disabled' : ''}`}
+                      whileTap={isEligible ? { scale: 0.98 } : {}}
+                      onClick={() => isEligible && handleSelectVoucher(v)}
+                    >
+                      <div className="bs-vc-header" style={{ borderLeftColor: v.color }}>
+                        <div className="bs-vc-info">
+                          <h4>{v.title}</h4>
+                          <p className="bs-vc-desc">{v.desc}</p>
+                          <div className="bs-vc-meta">
+                            <span className="bs-vc-code">{v.code}</span>
+                            <span className="bs-vc-expiry"><Clock size={10} /> s/d {v.expires}</span>
+                          </div>
+                        </div>
+                        <div className="bs-vc-value">
+                          <span className="bs-vc-amount">
+                            {v.discountType === 'percent' ? `${v.discountValue}%` : formatRp(v.discountValue)}
+                          </span>
+                          {isSelected && <Check size={18} color="var(--primary-dark)" />}
+                        </div>
+                      </div>
+
+                      {!isEligible && (
+                        <p className="bs-vc-min">Min. belanja {formatRp(v.minPurchase)}</p>
+                      )}
+
+                      {/* Syarat & Ketentuan toggle */}
+                      <button
+                        className="bs-vc-terms-btn"
+                        onClick={(e) => { e.stopPropagation(); setShowTerms(showTerms === v.id ? null : v.id) }}
+                      >
+                        <FileText size={12} />
+                        Syarat & Ketentuan
+                        <ChevronRight size={12} style={{ transform: showTerms === v.id ? 'rotate(90deg)' : 'none', transition: '0.2s' }} />
+                      </button>
+
+                      <AnimatePresence>
+                        {showTerms === v.id && (
+                          <motion.div
+                            className="bs-vc-terms"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <p>{v.terms || 'Berlaku sesuai ketentuan yang berlaku.'}</p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            )}
+          </BottomSheet>
+        )}
+      </AnimatePresence>
     </>
   )
 }

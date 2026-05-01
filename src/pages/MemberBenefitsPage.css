@@ -1,0 +1,155 @@
+/* ── Member Benefits Page ── */
+
+/* Current Level Banner */
+.mb-current-banner {
+  border-radius: var(--radius-md);
+  padding: 24px 20px 20px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.mb-banner-deco {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  right: -40px;
+  top: -60px;
+  pointer-events: none;
+}
+.mb-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 16px;
+}
+.mb-banner-icon {
+  font-size: 36px;
+}
+.mb-banner-level {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.mb-banner-points {
+  font-size: 13px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+.mb-banner-progress {
+  position: relative;
+  z-index: 1;
+}
+.mb-progress-label {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+.mb-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.mb-progress-fill {
+  height: 100%;
+  background: #fff;
+  border-radius: 100px;
+}
+
+/* Info box */
+.mb-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(155,196,56,0.06);
+  border: 1px solid rgba(155,196,56,0.12);
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+}
+.mb-info-box p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--neutral-600);
+}
+.mb-info-box strong {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+/* Level Cards */
+.mb-levels-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mb-level-card {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1.5px solid var(--neutral-200);
+  background: var(--surface);
+  transition: border-color 0.2s;
+}
+.mb-lc-current {
+  border-color: var(--primary) !important;
+  box-shadow: 0 4px 20px rgba(155,196,56,0.15);
+}
+
+.mb-lc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  color: #fff;
+  position: relative;
+}
+.mb-lc-icon {
+  font-size: 28px;
+}
+.mb-lc-title-group h3 {
+  font-size: 15px;
+  font-weight: 800;
+}
+.mb-lc-min {
+  font-size: 11px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+.mb-lc-badge {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(8px);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.mb-lc-perks {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mb-perk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mb-perk span {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}

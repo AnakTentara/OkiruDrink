@@ -1,38 +1,30 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Tag, Clock, CheckCircle, Copy, Check } from 'lucide-react'
+import { Tag, Clock, CheckCircle, Copy, Check, FileText, ChevronRight } from 'lucide-react'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
 import { useUser } from '../context/UserContext'
 import './VoucherPage.css'
 
-const allVouchers = [
+// Fallback vouchers for display (in case user has none)
+const displayVouchers = [
   {
-    id: 'v1',
-    title: 'Beli 2 Gratis 1',
+    id: 'dv1', title: 'Beli 2 Gratis 1',
     desc: 'Berlaku untuk semua produk OkiruDrink. Tidak berlaku dengan promo lain.',
-    expires: '31 Des 2026',
-    color: '#9BC438',
-    bg: '#EFF8D6',
-    code: 'B2G1FREE',
+    terms: 'Berlaku 1x per transaksi. Produk gratis adalah yang termurah. Tidak berlaku untuk produk promo lain. Berlaku di semua outlet.',
+    expires: '31 Des 2026', color: '#9BC438', bg: '#EFF8D6', code: 'B2G1FREE',
   },
   {
-    id: 'v2',
-    title: 'Diskon 20% Pertama',
+    id: 'dv2', title: 'Diskon 20% Pertama',
     desc: 'Diskon 20% untuk pembelian pertamamu. Berlaku sekali per akun.',
-    expires: '30 Jun 2026',
-    color: '#F5A623',
-    bg: '#FEF3CD',
-    code: 'OKIRU20',
+    terms: 'Hanya berlaku untuk pengguna baru. Minimum pembelian Rp 20.000. Tidak dapat digabungkan dengan voucher lain.',
+    expires: '30 Jun 2026', color: '#F5A623', bg: '#FEF3CD', code: 'OKIRU20',
   },
   {
-    id: 'v3',
-    title: 'Gratis Ongkir',
+    id: 'dv3', title: 'Gratis Ongkir',
     desc: 'Gratis ongkos kirim untuk pembelian min. Rp 30.000. Area Muara Enim.',
-    expires: '31 Agu 2026',
-    color: '#6C8EBF',
-    bg: '#E8F0FB',
-    code: 'FREEONGKIR',
+    terms: 'Berlaku untuk mode delivery saja. Area pengiriman maksimal 5 km dari outlet terdekat. Minimum pembelian Rp 30.000.',
+    expires: '31 Agu 2026', color: '#6C8EBF', bg: '#E8F0FB', code: 'FREEONGKIR',
   },
 ]
 
@@ -41,19 +33,17 @@ export default function VoucherPage() {
   const userVouchers = user?.vouchers || []
   const [activeTab, setActiveTab] = useState('available')
   const [copiedId, setCopiedId] = useState(null)
+  const [expandedTerms, setExpandedTerms] = useState(null)
 
-  // Merge: user vouchers + general ones (dedup by id)
-  const shown = [
-    ...userVouchers.map(uv => {
-      const found = allVouchers.find(av => av.id === uv.id)
-      return found ? { ...found, ...uv } : null
-    }).filter(Boolean),
-    ...allVouchers.filter(av => !userVouchers.find(uv => uv.id === av.id))
+  // Combine user vouchers + display vouchers (dedup)
+  const allVouchers = [
+    ...userVouchers,
+    ...displayVouchers.filter(dv => !userVouchers.find(uv => uv.id === dv.id))
   ]
 
   const filtered = activeTab === 'available'
-    ? shown.filter(v => !v.used)
-    : shown.filter(v => v.used)
+    ? allVouchers.filter(v => !v.used)
+    : allVouchers.filter(v => v.used)
 
   const handleCopy = (code, id) => {
     navigator.clipboard?.writeText(code)
@@ -70,33 +60,32 @@ export default function VoucherPage() {
           <p>Klaim dan gunakan voucher spesialmu</p>
         </div>
 
-        {/* Tab Filter */}
         <div className="voucher-tabs px-16">
-          <motion.button
+          <button
             className={`vt-tab ${activeTab === 'available' ? 'active' : ''}`}
             onClick={() => setActiveTab('available')}
-            whileTap={{ scale: 0.97 }}
           >
-            Tersedia
-            <span className="vt-count">{shown.filter(v => !v.used).length}</span>
-          </motion.button>
-          <motion.button
+            🎫 Tersedia
+            <span className="vt-count">{allVouchers.filter(v => !v.used).length}</span>
+          </button>
+          <button
             className={`vt-tab ${activeTab === 'used' ? 'active' : ''}`}
             onClick={() => setActiveTab('used')}
-            whileTap={{ scale: 0.97 }}
           >
-            Sudah Dipakai
-          </motion.button>
+            ✓ Terpakai
+            <span className="vt-count">{allVouchers.filter(v => v.used).length}</span>
+          </button>
         </div>
 
         <div className="voucher-list px-16">
           <AnimatePresence mode="popLayout">
             {filtered.length === 0 ? (
               <motion.div
-                key="empty"
                 className="voucher-empty"
+                key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               >
                 <span style={{ fontSize: 40 }}>🎫</span>
                 <p>Belum ada voucher di sini</p>
@@ -153,6 +142,37 @@ export default function VoucherPage() {
                   >
                     {v.used ? <><CheckCircle size={14} /> Dipakai</> : 'Gunakan'}
                   </motion.button>
+
+                  {/* Syarat & Ketentuan */}
+                  <div className="vc-terms-section">
+                    <button
+                      className="vc-terms-toggle"
+                      onClick={() => setExpandedTerms(expandedTerms === v.id ? null : v.id)}
+                    >
+                      <FileText size={12} />
+                      Syarat & Ketentuan
+                      <ChevronRight
+                        size={12}
+                        style={{
+                          transform: expandedTerms === v.id ? 'rotate(90deg)' : 'none',
+                          transition: '0.2s ease'
+                        }}
+                      />
+                    </button>
+                    <AnimatePresence>
+                      {expandedTerms === v.id && (
+                        <motion.div
+                          className="vc-terms-content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <p>{v.terms || 'Berlaku sesuai ketentuan yang berlaku. Voucher tidak dapat diuangkan dan tidak dapat digabung dengan promo lainnya.'}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </motion.div>
               ))
             )}
