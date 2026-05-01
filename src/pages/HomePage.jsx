@@ -30,7 +30,7 @@ export default function HomePage() {
       <Header />
       <main className="page-content">
         {/* Spacer diperkecil agar header overlap/menimpa banner sedikit */}
-        <div style={{ height: 56 }} />
+        <div style={{ height: 51 }} />
         <motion.div variants={stagger} initial="hidden" animate="show">
           {/* ── Hero Carousel ── */}
           <motion.div variants={section} style={{ marginTop: 4 }}>
