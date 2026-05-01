@@ -77,7 +77,7 @@
   position: absolute;
   top: var(--header-h);   /* 64px — tepat di bawah top row */
   left: 0;
-  padding: 8px 16px 12px;
+  padding: 4px 16px 16px; /* Padding atas dikecilkan agar text naik sedikit, simetris dengan lengkungan bawah */
 }
 
 /* ═══════════════════════════════════════
