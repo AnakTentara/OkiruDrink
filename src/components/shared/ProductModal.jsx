@@ -20,7 +20,6 @@ export default function ProductModal({ product, onClose }) {
   }
 
   return (
-    {/* Full Page Modal */}
     <motion.div
       className="full-page-modal"
       initial={{ y: '100%' }}
