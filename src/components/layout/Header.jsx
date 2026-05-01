@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { MapPin, ChevronDown, QrCode } from 'lucide-react'
 import { useUser } from '../../context/UserContext'
@@ -6,37 +6,73 @@ import './Header.css'
 
 function getGreeting() {
   const h = new Date().getHours()
-  if (h < 11) return { text: 'Selamat Pagi', emoji: '☀️' }
+  if (h < 11) return { text: 'Selamat Pagi',  emoji: '☀️' }
   if (h < 15) return { text: 'Selamat Siang', emoji: '🌤️' }
-  if (h < 18) return { text: 'Selamat Sore', emoji: '🌅' }
-  return { text: 'Selamat Malam', emoji: '🌙' }
+  if (h < 18) return { text: 'Selamat Sore',  emoji: '🌅' }
+  return        { text: 'Selamat Malam', emoji: '🌙' }
 }
 
+const HOME_H      = 144  // tinggi penuh di home (dengan greeting)
+const BASE_H      = 64   // tinggi compact
+const SCROLL_RANGE = 80  // px scroll untuk menciut penuh
+
 export default function Header() {
-  const { user } = useUser()
-  const navigate  = useNavigate()
-  const location  = useLocation()
+  const { user }   = useUser()
+  const navigate   = useNavigate()
+  const location   = useLocation()
   const [scrolled, setScrolled] = useState(false)
-  const isHome = location.pathname === '/'
+  const headerRef  = useRef(null)
+  const isHome     = location.pathname === '/'
 
   useEffect(() => {
-    const pageContent = document.querySelector('.page-content')
-    if (!pageContent) return
+    const pageEl   = document.querySelector('.page-content')
+    const headerEl = headerRef.current
+    if (!pageEl || !headerEl) return
 
-    const handleScroll = () => {
-      setScrolled(pageContent.scrollTop > 10)
+    const update = () => {
+      const st    = pageEl.scrollTop
+      const ratio = Math.min(Math.max(st / SCROLL_RANGE, 0), 1)
+
+      // Binary state — hanya untuk logo size & accent line via CSS class
+      setScrolled(st > 10)
+
+      if (isHome) {
+        // ── Scroll-linked: langsung, proporsional, tanpa delay ──
+
+        // Height: 144px → 64px seiring scroll
+        const h = HOME_H - ratio * (HOME_H - BASE_H)
+        headerEl.style.height = h + 'px'
+
+        // Border-radius bawah: 24px → 0px
+        const br = Math.round(24 * (1 - ratio))
+        headerEl.style.borderRadius = `40px 40px ${br}px ${br}px`
+
+        // Box shadow muncul seiring scroll
+        if (ratio > 0.02) {
+          headerEl.style.boxShadow =
+            `0 2px ${ratio * 20}px rgba(0,0,0,${ratio * 0.07}),` +
+            `0 1px 0 rgba(155,196,56,${ratio * 0.12})`
+          headerEl.style.borderBottomColor =
+            `rgba(155, 196, 56, ${ratio * 0.18})`
+        } else {
+          headerEl.style.boxShadow       = 'none'
+          headerEl.style.borderBottomColor = 'transparent'
+        }
+      }
     }
 
-    pageContent.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // initial check
-
-    return () => pageContent.removeEventListener('scroll', handleScroll)
-  }, [])
+    pageEl.addEventListener('scroll', update, { passive: true })
+    update() // initial
+    return () => pageEl.removeEventListener('scroll', update)
+  }, [isHome])
 
   const greeting = getGreeting()
 
   return (
-    <header className={`app-header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
+    <header
+      ref={headerRef}
+      className={`app-header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}
+    >
       <div className="header-top-row">
         {/* Left: Logo + level */}
         <button className="header-brand" onClick={() => navigate('/')}>

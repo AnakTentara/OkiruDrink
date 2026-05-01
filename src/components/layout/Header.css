@@ -1,103 +1,91 @@
-/* ── App Header ── */
+/* ═══════════════════════════════════════
+   APP HEADER
+   Height & shadow → dicontrol JS (scroll-linked, tanpa delay)
+   Logo size, accent line → CSS class .scrolled
+   ═══════════════════════════════════════ */
+
+/* ── Base shell ── */
 .app-header {
-  position: absolute;               /* Fixed terhadap .app-shell (overflow:hidden container) */
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
-  max-width: 100%;                  /* Ikuti lebar phone frame */
-  height: var(--header-h);          /* Compact: padding simetris, tanpa 44px safe area */
-  background: rgba(255, 255, 255, 0.08); /* Hampir transparan di atas banner */
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  border-bottom: 1px solid transparent;
-  display: block;
+  height: var(--header-h);           /* Default non-home: 64px */
+  background: rgba(255, 255, 255, 0.97); /* Selalu solid — nutup banner */
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid transparent; /* Dikontrol JS inline */
   z-index: 100;
-  will-change: background, backdrop-filter, height;
-  /* SATU transisi tunggal — semua properti bergerak bersama, konsisten */
-  transition:
-    background          0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    backdrop-filter     0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    -webkit-backdrop-filter 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color        0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow          0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    height              0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  overflow: hidden;                  /* Greeting ter-clip natural saat menciut */
   border-radius: 40px 40px 0 0;
+  /* Tidak ada transition untuk height/background — dikontrol JS langsung */
+  /* Hanya transition untuk logo size (smooth tapi bukan scroll-linked) */
+  will-change: height;
 }
 
-/* is-home tapi BELUM di-scroll: gradient transparan (di atas banner) */
-.app-header.is-home:not(.scrolled) {
-  height: 144px;              /* 64px base + 80px greeting row */
+/* is-home: default tinggi penuh sebelum JS update pertama */
+.app-header.is-home {
+  height: 144px;
   border-radius: 40px 40px 24px 24px;
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.60) 0%,
-    rgba(245,251,232,0.25) 100%
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
-/* Saat scroll: SOLID penuh — menang atas semua state lain (termasuk is-home) */
-.app-header.scrolled,
-.app-header.is-home.scrolled {
-  height: var(--header-h);
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid rgba(155, 196, 56, 0.18);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.06), 0 1px 0 rgba(155,196,56,0.1);
-  border-radius: 40px 40px 0 0;
-}
-
-/* Top accent line */
+/* ── Top accent line — fade in via CSS (.scrolled class) ── */
 .app-header::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 2.5px;
-  background: linear-gradient(90deg, var(--primary-dark), var(--primary), #C8E76A, var(--primary));
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark),
+    var(--primary),
+    #C8E76A,
+    var(--primary)
+  );
   background-size: 300% 100%;
   animation: shimmer 4s linear infinite;
   z-index: 2;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+.app-header.scrolled::before {
+  opacity: 1;
 }
 
-/* ── Rows ── */
+/* ═══════════════════════════════════════
+   TOP ROW
+   ═══════════════════════════════════════ */
 .header-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  /* Padding simetris atas-bawah — konten terasa di tengah, bukan jidat lebar */
   padding: 12px 16px;
   gap: 8px;
 }
 
+/* ═══════════════════════════════════════
+   GREETING ROW
+   Tidak perlu opacity transition — ter-clip oleh overflow:hidden
+   saat header menciut via scroll-linked height
+   ═══════════════════════════════════════ */
 .header-greeting-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   position: absolute;
-  top: var(--header-h); /* Tepat di bawah baseline header compact */
+  top: var(--header-h);   /* 64px — tepat di bawah top row */
   left: 0;
   padding: 8px 16px 12px;
-  /* Transisi searah dengan durasi yang sama */
-  transition:
-    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateY(0);
-  opacity: 1;
 }
 
-.app-header.scrolled .header-greeting-row {
-  opacity: 0;
-  transform: translateY(-16px);
-  pointer-events: none;
-}
-
-/* ── Brand button ── */
+/* ═══════════════════════════════════════
+   BRAND / LOGO
+   ═══════════════════════════════════════ */
 .header-brand {
   display: flex;
   align-items: center;
@@ -108,40 +96,65 @@
   padding: 0;
   text-align: left;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity var(--transition);
+  transition: opacity 0.18s ease;
 }
 .header-brand:active { opacity: 0.7; }
 
 .header-logo-img {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
   border: 2px solid var(--primary-light);
   background: #fff;
-  box-shadow: 0 2px 10px rgba(155,196,56,0.25);
-  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 2px 10px rgba(155, 196, 56, 0.22);
+  /* Size berubah dengan CSS transition (tidak perlu instan) */
+  transition:
+    width      0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    height     0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.22s ease;
 }
+
+/* is-home non-scrolled: logo lebih besar */
+.app-header.is-home:not(.scrolled) .header-logo-img {
+  width: 44px;
+  height: 44px;
+  box-shadow:
+    0 0 0 3px rgba(155, 196, 56, 0.12),
+    0 4px 12px rgba(155, 196, 56, 0.28);
+}
+
+/* Compact: logo mengecil */
 .app-header.scrolled .header-logo-img {
-  width: 36px;
-  height: 36px;
-  box-shadow: 0 2px 6px rgba(155,196,56,0.15);
+  width: 34px;
+  height: 34px;
+  box-shadow: 0 2px 6px rgba(155, 196, 56, 0.15);
 }
-.header-brand:hover .header-logo-img { transform: scale(1.05); }
+
+.header-brand:hover .header-logo-img {
+  transform: scale(1.05);
+}
 
 .header-brand-text {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
+
 .header-brand-name {
   font-size: 15px;
   font-weight: 800;
   color: var(--neutral-900);
   line-height: 1;
   letter-spacing: -0.2px;
+  transition: font-size 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.app-header.is-home:not(.scrolled) .header-brand-name {
+  font-size: 16px;
+}
+
+/* Level label — SELALU VISIBLE (user request) */
 .header-level {
   display: flex;
   align-items: center;
@@ -150,7 +163,9 @@
   font-weight: 600;
   color: var(--primary-dark);
   letter-spacing: 0.2px;
+  /* Tidak ada opacity:0 saat scrolled — selalu keliatan */
 }
+
 .level-dot {
   width: 5px;
   height: 5px;
@@ -159,13 +174,15 @@
   animation: pulse-ring 2.5s infinite;
 }
 
-/* ── Location pill ── */
+/* ═══════════════════════════════════════
+   LOCATION PILL
+   ═══════════════════════════════════════ */
 .header-location {
   display: flex;
   align-items: center;
   gap: 3px;
   background: var(--primary-xlight);
-  border: 1.5px solid rgba(155,196,56,0.2);
+  border: 1.5px solid rgba(155, 196, 56, 0.2);
   border-radius: var(--radius-full);
   padding: 6px 10px;
   cursor: pointer;
@@ -177,20 +194,20 @@
   white-space: nowrap;
   max-width: 120px;
   overflow: hidden;
-  transition: all var(--transition);
+  transition: background 0.18s ease, border-color 0.18s ease;
 }
 .header-location:hover {
   background: var(--primary-light);
   border-color: var(--primary);
 }
-.location-pin { color: var(--primary-dark); flex-shrink: 0; }
-.location-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+.header-location:active { opacity: 0.8; }
 
-/* ── Right controls ── */
+.location-pin  { color: var(--primary-dark); flex-shrink: 0; }
+.location-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ═══════════════════════════════════════
+   RIGHT CONTROLS
+   ═══════════════════════════════════════ */
 .header-right {
   display: flex;
   align-items: center;
@@ -202,11 +219,15 @@
   align-items: center;
   gap: 4px;
   background: linear-gradient(135deg, #FFF3CD, #FEF9E7);
-  border: 1.5px solid rgba(245,166,35,0.25);
+  border: 1.5px solid rgba(245, 166, 35, 0.25);
   border-radius: var(--radius-full);
   padding: 5px 10px;
-  box-shadow: 0 2px 8px rgba(245,166,35,0.1);
-  animation: fadeInUp 0.3s ease;
+  box-shadow: 0 2px 8px rgba(245, 166, 35, 0.1);
+  animation: fadeIn 0.20s ease both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .points-icon { font-size: 12px; }
 .points-val  { font-size: 11px; font-weight: 800; color: #B8740A; white-space: nowrap; }
@@ -215,24 +236,23 @@
   width: 34px;
   height: 34px;
   background: var(--primary-xlight);
-  border: 1.5px solid rgba(155,196,56,0.2);
+  border: 1.5px solid rgba(155, 196, 56, 0.2);
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
-  transition: all var(--transition);
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
-.header-qr:hover {
-  background: var(--primary-light);
-  border-color: var(--primary);
-  transform: scale(1.05);
-}
+.header-qr:hover  { background: var(--primary-light); border-color: var(--primary); transform: scale(1.06); }
 .header-qr:active { transform: scale(0.92); }
 
-/* ── Greeting Banner ── */
+/* ═══════════════════════════════════════
+   GREETING CONTENT
+   ═══════════════════════════════════════ */
 .greeting-text-wrap { flex: 1; min-width: 0; }
+
 .greeting-sub {
   font-size: 12px;
   font-weight: 600;
@@ -240,6 +260,7 @@
   letter-spacing: 0.3px;
   margin-bottom: 2px;
 }
+
 .greeting-name {
   font-size: 22px;
   font-weight: 800;
@@ -248,12 +269,20 @@
   margin-bottom: 2px;
   letter-spacing: -0.3px;
 }
-.greeting-wave { display: inline-block; animation: wave 2s ease-in-out infinite; }
+
+.greeting-wave {
+  display: inline-block;
+  animation: wave 2s ease-in-out infinite;
+  transform-origin: 70% 70%;
+}
 @keyframes wave {
   0%, 100% { transform: rotate(0deg); }
-  25%       { transform: rotate(20deg); }
-  75%       { transform: rotate(-10deg); }
+  15%       { transform: rotate(18deg); }
+  35%       { transform: rotate(-8deg); }
+  55%       { transform: rotate(14deg); }
+  70%       { transform: rotate(-4deg); }
 }
+
 .greeting-tagline {
   font-size: 12px;
   color: var(--neutral-400);
@@ -268,19 +297,9 @@
   border: 1.5px solid var(--primary-light);
   border-radius: 14px;
   padding: 10px 14px;
-  box-shadow: 0 4px 12px rgba(155,196,56,0.1);
+  box-shadow: 0 4px 12px rgba(155, 196, 56, 0.1);
   flex-shrink: 0;
 }
-.greeting-pts-icon { font-size: 20px; }
-.greeting-pts-val {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--primary-dark);
-  line-height: 1;
-}
-.greeting-pts-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--neutral-400);
-  margin-top: 1px;
-}
+.greeting-pts-icon  { font-size: 20px; }
+.greeting-pts-val   { font-size: 16px; font-weight: 800; color: var(--primary-dark); line-height: 1; }
+.greeting-pts-label { font-size: 10px; font-weight: 600; color: var(--neutral-400); margin-top: 1px; }
