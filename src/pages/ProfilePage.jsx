@@ -53,6 +53,7 @@ export default function ProfilePage() {
         {/* Profile Card */}
         <motion.div
           className="profile-card"
+          style={{ '--profile-bg': levelInfo.gradient }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >

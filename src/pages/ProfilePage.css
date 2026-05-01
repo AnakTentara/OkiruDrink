@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  background: linear-gradient(135deg, #6A9A1F 0%, #9BC438 60%, #B8D860 100%);
+  background: var(--profile-bg, linear-gradient(135deg, #6A9A1F 0%, #9BC438 60%, #B8D860 100%));
   padding: 56px 20px 24px;
   position: relative;
   overflow: hidden;
