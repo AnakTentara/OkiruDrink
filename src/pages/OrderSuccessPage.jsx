@@ -1,25 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle, Home, ShoppingBag } from 'lucide-react'
+import { CheckCircle, Home, ShoppingBag, Package, Coffee, Clock, Share2 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { useCart } from '../context/CartContext'
 import './OrderSuccessPage.css'
 
 // Random confetti pieces
-const CONFETTI = Array.from({ length: 22 }, (_, i) => ({
+const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
   id: i,
-  color: ['#9BC438','#F5A623','#6A9A1F','#D4EDAA','#FEF3CD'][i % 5],
+  color: ['#9BC438','#F5A623','#6A9A1F','#D4EDAA','#FEF3CD','#E05252'][i % 6],
   left: `${Math.random() * 100}%`,
   delay: Math.random() * 0.8,
-  size: 6 + Math.random() * 8,
+  size: 5 + Math.random() * 8,
+  shape: i % 3 === 0 ? '50%' : i % 3 === 1 ? '2px' : '0',
 }))
+
+const trackingSteps = [
+  { icon: CheckCircle, label: 'Pesanan Diterima', sub: 'Menunggu konfirmasi', done: true },
+  { icon: Coffee,      label: 'Sedang Dibuat',    sub: 'Barista membuatkan pesananmu', done: false },
+  { icon: Package,     label: 'Siap Diambil',     sub: 'Pesanan siap di counter',     done: false },
+]
 
 export default function OrderSuccessPage() {
   const navigate        = useNavigate()
   const location        = useLocation()
   const { addOrder, addPoints } = useUser()
   const { cart, clearCart }     = useCart()
+  const [orderNum] = useState(() => `#OKR${Date.now().toString().slice(-6)}`)
 
   const orderData = location.state?.order || {
     items: cart.items,
@@ -36,6 +44,7 @@ export default function OrderSuccessPage() {
   }, [])
 
   const formatRp = (n) => `Rp ${(n || 0).toLocaleString('id-ID')}`
+  const pointsEarned = Math.floor((orderData.total || 0) / 1000) * 5
 
   return (
     <div className="success-page">
@@ -45,9 +54,15 @@ export default function OrderSuccessPage() {
           <motion.div
             key={c.id}
             className="confetti-piece"
-            style={{ left: c.left, background: c.color, width: c.size, height: c.size, borderRadius: c.size / 2 }}
+            style={{
+              left: c.left,
+              background: c.color,
+              width: c.size,
+              height: c.size * (c.shape === '2px' ? 3 : 1),
+              borderRadius: c.shape,
+            }}
             initial={{ y: -20, opacity: 1, rotate: 0 }}
-            animate={{ y: '110vh', opacity: 0, rotate: 720 }}
+            animate={{ y: '110vh', opacity: 0, rotate: 720 + Math.random() * 360 }}
             transition={{ duration: 2.5 + Math.random(), delay: c.delay, ease: 'linear' }}
           />
         ))}
@@ -88,7 +103,7 @@ export default function OrderSuccessPage() {
         >
           <div className="os-row">
             <span className="os-label">No. Pesanan</span>
-            <span className="os-val">#OKR{Date.now().toString().slice(-6)}</span>
+            <span className="os-val os-order-num">{orderNum}</span>
           </div>
           <div className="os-row">
             <span className="os-label">Total Bayar</span>
@@ -96,13 +111,53 @@ export default function OrderSuccessPage() {
           </div>
           <div className="os-row">
             <span className="os-label">Estimasi Selesai</span>
-            <span className="os-val">± 15-20 menit</span>
+            <span className="os-val">
+              <Clock size={13} style={{ verticalAlign: '-2px', marginRight: 4 }} />
+              ± 15-20 menit
+            </span>
           </div>
           <div className="os-row">
             <span className="os-label">Poin Didapat</span>
-            <span className="os-val" style={{ color: 'var(--accent)' }}>
-              +{Math.floor((orderData.total || 0) / 1000) * 5} pts 🌟
+            <span className="os-val os-points">
+              +{pointsEarned} pts 🌟
             </span>
+          </div>
+        </motion.div>
+
+        {/* Order Tracking Timeline */}
+        <motion.div
+          className="tracking-card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+        >
+          <h3 className="tracking-title">Status Pesanan</h3>
+          <div className="tracking-timeline">
+            {trackingSteps.map((step, i) => {
+              const Icon = step.icon
+              return (
+                <motion.div
+                  key={i}
+                  className={`tracking-step ${step.done ? 'done' : ''}`}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1 + i * 0.15 }}
+                >
+                  <div className="ts-indicator">
+                    <div className={`ts-dot ${step.done ? 'ts-dot-done' : ''}`}>
+                      {step.done && <CheckCircle size={14} color="#fff" />}
+                    </div>
+                    {i < trackingSteps.length - 1 && (
+                      <div className={`ts-line ${step.done ? 'ts-line-done' : ''}`} />
+                    )}
+                  </div>
+                  <div className="ts-content">
+                    <span className="ts-label">{step.label}</span>
+                    <span className="ts-sub">{step.sub}</span>
+                  </div>
+                </motion.div>
+              )
+            })}
           </div>
         </motion.div>
 
@@ -110,22 +165,24 @@ export default function OrderSuccessPage() {
           className="success-actions"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
+          transition={{ delay: 1.1 }}
         >
-          <button
+          <motion.button
             id="back-home"
             className="btn btn-primary btn-full btn-lg"
             onClick={() => navigate('/')}
+            whileTap={{ scale: 0.97 }}
           >
             <Home size={18} /> Kembali ke Beranda
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             id="order-more"
             className="btn btn-outline btn-full"
             onClick={() => navigate('/menu')}
+            whileTap={{ scale: 0.97 }}
           >
             <ShoppingBag size={16} /> Pesan Lagi
-          </button>
+          </motion.button>
         </motion.div>
       </motion.div>
     </div>

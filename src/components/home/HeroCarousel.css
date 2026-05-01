@@ -9,7 +9,7 @@
 .carousel-track {
   position: relative;
   width: 100%;
-  padding-top: 52%; /* Slightly taller */
+  padding-top: 52%;
   overflow: hidden;
   border-radius: 0;
   background: var(--neutral-100);
@@ -37,7 +37,7 @@
 
 .carousel-dots {
   position: absolute;
-  bottom: 44px; /* Digeser ke atas agar tidak tertutup Quick Actions yang overlap -36px */
+  bottom: 44px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -49,15 +49,28 @@
   width: 6px;
   height: 6px;
   border-radius: var(--radius-full);
-  background: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.35);
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  overflow: hidden;
 }
+
 .dot-active {
-  width: 22px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  width: 28px;
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-.dot:hover:not(.dot-active) { background: rgba(255,255,255,0.7); }
+
+.dot-progress {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: inherit;
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.dot:hover:not(.dot-active) { background: rgba(255,255,255,0.6); }

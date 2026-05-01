@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import './HeroCarousel.css'
 
@@ -20,23 +20,52 @@ const slides = [
   },
 ]
 
+const INTERVAL = 4200
+
 export default function HeroCarousel() {
-  const [active, setActive]   = useState(0)
-  const [direction, setDir]   = useState(1)
+  const [active, setActive] = useState(0)
+  const [direction, setDir] = useState(1)
+  const [progress, setProgress] = useState(0)
   const timerRef = useRef(null)
+  const progressRef = useRef(null)
+  const startTimeRef = useRef(Date.now())
+
+  const resetProgress = useCallback(() => {
+    startTimeRef.current = Date.now()
+    setProgress(0)
+  }, [])
 
   const goTo = (idx) => {
     setDir(idx > active ? 1 : -1)
     setActive(idx)
+    resetProgress()
   }
 
+  // Auto-advance
   useEffect(() => {
     timerRef.current = setInterval(() => {
       setDir(1)
       setActive(prev => (prev + 1) % slides.length)
-    }, 4200)
+      resetProgress()
+    }, INTERVAL)
     return () => clearInterval(timerRef.current)
-  }, [])
+  }, [resetProgress])
+
+  // Progress animation frame
+  useEffect(() => {
+    const animate = () => {
+      const elapsed = Date.now() - startTimeRef.current
+      const pct = Math.min(elapsed / INTERVAL, 1)
+      setProgress(pct)
+      if (pct < 1) {
+        progressRef.current = requestAnimationFrame(animate)
+      }
+    }
+    progressRef.current = requestAnimationFrame(animate)
+    return () => {
+      if (progressRef.current) cancelAnimationFrame(progressRef.current)
+    }
+  }, [active])
 
   const variants = {
     enter:  (d) => ({ x: d > 0 ? '100%' : '-100%', opacity: 0 }),
@@ -68,7 +97,7 @@ export default function HeroCarousel() {
         </AnimatePresence>
       </div>
 
-      {/* Dots */}
+      {/* Progress Dots */}
       <div className="carousel-dots">
         {slides.map((s, i) => (
           <button
@@ -76,7 +105,14 @@ export default function HeroCarousel() {
             className={`dot ${i === active ? 'dot-active' : ''}`}
             onClick={() => goTo(i)}
             aria-label={`Slide ${i + 1}`}
-          />
+          >
+            {i === active && (
+              <span
+                className="dot-progress"
+                style={{ transform: `scaleX(${progress})` }}
+              />
+            )}
+          </button>
         ))}
       </div>
     </div>

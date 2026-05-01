@@ -21,23 +21,34 @@ export default function BottomNav() {
         const isActive = location.pathname === item.path
         const Icon = item.icon
         return (
-          <button
+          <motion.button
             key={item.path}
             className={`nav-item ${isActive ? 'active' : ''}`}
             onClick={() => navigate(item.path)}
+            whileTap={{ scale: 0.88 }}
           >
             {isActive && (
               <motion.div
-                layoutId="nav-ball"
-                className="nav-ball"
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                layoutId="nav-pill"
+                className="nav-pill"
+                transition={{ type: "spring", stiffness: 400, damping: 28 }}
               />
             )}
-            <div className="nav-icon-wrapper">
-              <Icon size={24} strokeWidth={isActive ? 2.5 : 2} className="nav-icon" />
-            </div>
-            <span className="nav-label">{item.label}</span>
-          </button>
+            <motion.div
+              className="nav-icon-wrapper"
+              animate={isActive ? { y: -2, scale: 1.05 } : { y: 0, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+            >
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} className="nav-icon" />
+            </motion.div>
+            <motion.span
+              className="nav-label"
+              animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {item.label}
+            </motion.span>
+          </motion.button>
         )
       })}
     </nav>
