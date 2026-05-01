@@ -452,7 +452,11 @@ body {
     height: 100dvh;
     border-radius: 0;
     overflow: hidden;
+    -webkit-mask-image: none;
   }
+  
+  .chrome-browser-ui { display: none; }
+  .browser-viewport { height: 100%; }
 
   .page-content {
     min-height: 100dvh;
