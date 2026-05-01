@@ -22,7 +22,6 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  border-radius: 40px 40px 0 0;
 }
 .sub-back {
   width: 36px; height: 36px;

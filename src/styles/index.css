@@ -344,6 +344,7 @@ body {
   overflow: hidden;
   border-radius: 40px; /* Geometrically precise: 52px frame - 12px padding */
   transform: translateZ(0); /* IMPORTANT: creates a containing block for absolute descendants */
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* Force hardware accelerated clipping of border-radius for Webkit/Safari */
 }
 
 /* Page content below header, above nav */
