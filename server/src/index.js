@@ -33,10 +33,8 @@ app.use((req, res) => {
 })
 
 // ── Global error handler ────────────────────────────────────
-app.use((err, req, res, next) => {
-  console.error('🔥 Unhandled error:', err)
-  res.status(500).json({ ok: false, error: 'Internal server error' })
-})
+const { errorHandler } = require('./middlewares/errorHandler')
+app.use(errorHandler)
 
 // ── Start ───────────────────────────────────────────────────
 async function start() {
