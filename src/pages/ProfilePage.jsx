@@ -47,13 +47,11 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Header />
-      <main className="page-content">
-
+      <main className="page-content" style={{ paddingTop: 0 }}>
         {/* Profile Card */}
         <motion.div
-          className="profile-card px-16"
-          initial={{ opacity: 0, y: 16 }}
+          className="profile-card"
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <motion.div

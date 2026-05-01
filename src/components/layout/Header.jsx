@@ -83,9 +83,9 @@ export default function Header() {
         </button>
 
         {/* Center: Location */}
-        <button className="header-location">
+        <button className="header-location" onClick={() => navigate('/location', { state: { slideFromBottom: true } })}>
           <MapPin size={13} className="location-pin" />
-          <span className="location-text">Muara Enim</span>
+          <span className="location-text">Outlet Terdekat</span>
           <ChevronDown size={13} />
         </button>
 
@@ -97,7 +97,7 @@ export default function Header() {
               <span className="points-val">{user?.points ?? 0} pts</span>
             </div>
           )}
-          <button className="header-qr" aria-label="Scan QR">
+          <button className="header-qr" aria-label="Scan QR" onClick={() => navigate('/qr-code')}>
             <QrCode size={20} color={`var(--primary-dark)`} />
           </button>
         </div>

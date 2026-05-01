@@ -42,9 +42,18 @@ const pageVariants = {
 }
 
 function PageWrap({ children }) {
+  const location = useLocation()
+  const isSlideUp = location.state?.slideFromBottom
+  
+  const variants = isSlideUp ? {
+    initial: { opacity: 0, y: '100%' },
+    animate: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
+    exit:    { opacity: 0, y: '100%', transition: { duration: 0.2 } }
+  } : pageVariants
+
   return (
     <motion.div
-      variants={pageVariants}
+      variants={variants}
       initial="initial"
       animate="animate"
       exit="exit"
@@ -224,7 +233,25 @@ export default function App() {
                     </div>
 
                     <div className="app-shell">
-                      <AnimatedRoutes />
+                      <div className="chrome-browser-ui">
+                        <div className="chrome-status-bar">
+                          <span>9:41</span>
+                          <div className="status-icons">
+                            <span style={{ fontSize: 10 }}>5G</span>
+                            <div className="battery-icon" />
+                          </div>
+                        </div>
+                        <div className="chrome-nav-bar">
+                          <div className="chrome-url-box">
+                            <span className="lock-icon">🔒</span>
+                            <span className="chrome-url">okirudrink.com</span>
+                          </div>
+                          <span className="chrome-dots">⋮</span>
+                        </div>
+                      </div>
+                      <div className="browser-viewport">
+                        <AnimatedRoutes />
+                      </div>
                     </div>
 
                     <div className="phone-home-indicator">

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Home, Coffee, Ticket, User } from 'lucide-react'
 import './BottomNav.css'
 
@@ -27,13 +27,17 @@ export default function BottomNav() {
             onClick={() => navigate(item.path)}
             aria-label={item.label}
           >
-            {isActive && (
-              <motion.div
-                layoutId="nav-active-bg"
-                className="nav-active-pill"
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              />
-            )}
+            <AnimatePresence>
+              {isActive && (
+                <motion.div
+                  className="nav-active-pill"
+                  initial={{ opacity: 0, scale: 0.4 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.15 } }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                />
+              )}
+            </AnimatePresence>
             <div className="nav-icon-wrap">
               <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
             </div>
