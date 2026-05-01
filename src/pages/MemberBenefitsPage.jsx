@@ -106,14 +106,18 @@ export default function MemberBenefitsPage() {
           {/* Progress to next level */}
           {currentLevel !== 'Diamond' && (() => {
             const currentIdx = LEVELS.findIndex(l => l.key === currentLevel)
+            const currentMin = LEVELS[currentIdx].minPoints
             const nextLevel = LEVELS[currentIdx + 1]
-            const progress = Math.min(currentPoints / nextLevel.minPoints, 1)
+            
+            // Progress between current level min points and next level min points
+            const progress = Math.max(0, Math.min((currentPoints - currentMin) / (nextLevel.minPoints - currentMin), 1))
+            
             return (
               <div className="mb-banner-progress">
                 <p className="mb-progress-label">
                   {nextLevel.minPoints - currentPoints > 0
                     ? `${(nextLevel.minPoints - currentPoints).toLocaleString('id-ID')} poin lagi menuju ${nextLevel.label}`
-                    : `Kamu sudah layak naik ke ${nextLevel.label}!`}
+                    : `Level kamu akan segera naik ke ${nextLevel.label}!`}
                 </p>
                 <div className="mb-progress-bar">
                   <motion.div
