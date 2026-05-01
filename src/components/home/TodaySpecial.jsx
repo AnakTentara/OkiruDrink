@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import ProductModal from '../shared/ProductModal'
 import products from '../../data/products.json'
@@ -19,7 +18,7 @@ export default function TodaySpecial() {
       <div className="section-header">
         <h3 className="section-title">Spesial Hari Ini</h3>
         <button className="section-link" onClick={() => navigate('/menu')}>
-          Lihat Semua <ChevronRight size={14} />
+          Lihat Semua
         </button>
       </div>
 

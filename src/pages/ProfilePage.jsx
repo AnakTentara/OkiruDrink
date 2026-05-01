@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award } from 'lucide-react'
+import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3, QrCode, Gift, Navigation, Info } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
@@ -8,17 +8,19 @@ import { useUser } from '../context/UserContext'
 import './ProfilePage.css'
 
 const menuItems = [
-  { icon: Package,  label: 'Riwayat Pesanan', id: 'nav-orders' },
-  { icon: MapPin,   label: 'Alamat Pengiriman', id: 'nav-address' },
-  { icon: Star,     label: 'Program Loyalitas', id: 'nav-loyalty' },
-  { icon: Shield,   label: 'Keamanan Akun', id: 'nav-security' },
-  { icon: Leaf,     label: 'Tentang OkiruDrink', id: 'nav-about' },
+  { icon: Package,    label: 'Riwayat Pesanan',     path: '/orders' },
+  { icon: MapPin,     label: 'Alamat Pengiriman',   path: '/address' },
+  { icon: Star,       label: 'Program Loyalitas',   path: '/loyalty' },
+  { icon: Gift,       label: 'Tukar Poin',          path: '/redeem' },
+  { icon: QrCode,     label: 'Kode QR Member',      path: '/qr-code' },
+  { icon: Navigation, label: 'Ganti Lokasi Outlet', path: '/location' },
+  { icon: Shield,     label: 'Keamanan Akun',       path: '/security' },
+  { icon: Info,       label: 'Tentang OkiruDrink',  path: '/about' },
 ]
 
 function AnimatedCounter({ value, suffix = '' }) {
   const [display, setDisplay] = useState(0)
   useEffect(() => {
-    let start = 0
     const end = typeof value === 'number' ? value : parseInt(value) || 0
     if (end === 0) { setDisplay(0); return }
     const duration = 600
@@ -36,18 +38,12 @@ function AnimatedCounter({ value, suffix = '' }) {
 }
 
 export default function ProfilePage() {
-  const { user, logout } = useUser()
-  const navigate          = useNavigate()
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login', { replace: true })
-  }
+  const { user } = useUser()
+  const navigate = useNavigate()
 
   const orders = user?.orders || []
   const points = user?.points ?? 0
   const levelProgress = Math.min(points / 500, 1)
-  const nextLevel = points >= 500 ? 'Okiru VIP ✨' : 'Okiru Member'
 
   return (
     <>
@@ -65,6 +61,8 @@ export default function ProfilePage() {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            onClick={() => navigate('/edit-profile')}
+            style={{ cursor: 'pointer' }}
           >
             {(user?.name?.[0] || 'O').toUpperCase()}
           </motion.div>
@@ -76,6 +74,19 @@ export default function ProfilePage() {
               {user?.level || 'Okiru Member'}
             </div>
           </div>
+          <motion.button
+            onClick={() => navigate('/edit-profile')}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              position: 'relative', zIndex: 1,
+              background: 'rgba(255,255,255,0.2)', border: 'none',
+              borderRadius: 10, width: 36, height: 36,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#fff',
+            }}
+          >
+            <Edit3 size={16} />
+          </motion.button>
         </motion.div>
 
         {/* Level Progress */}
@@ -121,7 +132,6 @@ export default function ProfilePage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 + i * 0.08 }}
-              whileHover={{ y: -3 }}
             >
               <span className="stat-icon">{s.icon}</span>
               <span className="stat-value">
@@ -143,7 +153,13 @@ export default function ProfilePage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>Pesanan Terakhir</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700 }}>Pesanan Terakhir</h3>
+              <button
+                onClick={() => navigate('/orders')}
+                style={{ background: 'none', border: 'none', color: 'var(--primary-dark)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font)' }}
+              >Lihat Semua</button>
+            </div>
             {orders.slice(0, 2).map((o, i) => (
               <motion.div
                 key={i}
@@ -168,15 +184,15 @@ export default function ProfilePage() {
 
         {/* Menu Items */}
         <div className="profile-menu px-16">
-          {menuItems.map(({ icon: Icon, label, id }, i) => (
+          {menuItems.map(({ icon: Icon, label, path }, i) => (
             <motion.button
-              key={id}
-              id={id}
+              key={path}
               className="profile-menu-item"
+              onClick={() => navigate(path)}
               whileTap={{ scale: 0.98 }}
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + i * 0.05 }}
+              transition={{ delay: 0.2 + i * 0.04 }}
             >
               <div className="pmi-left">
                 <div className="pmi-icon">
@@ -192,9 +208,8 @@ export default function ProfilePage() {
         {/* Logout */}
         <div className="px-16" style={{ marginTop: 8 }}>
           <motion.button
-            id="btn-logout"
             className="btn btn-outline btn-full"
-            onClick={handleLogout}
+            onClick={() => navigate('/logout')}
             whileTap={{ scale: 0.97 }}
             style={{ color: 'var(--danger)', borderColor: 'var(--danger)', gap: 8 }}
           >

@@ -22,6 +22,18 @@ import ProfilePage      from './pages/ProfilePage'
 import CartPage         from './pages/CartPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 
+// Sub-pages
+import OrderHistoryPage  from './pages/OrderHistoryPage'
+import AddressPage       from './pages/AddressPage'
+import LoyaltyPage       from './pages/LoyaltyPage'
+import SecurityPage      from './pages/SecurityPage'
+import AboutPage         from './pages/AboutPage'
+import LogoutPage        from './pages/LogoutPage'
+import RedeemPointsPage  from './pages/RedeemPointsPage'
+import EditProfilePage   from './pages/EditProfilePage'
+import QRCodePage        from './pages/QRCodePage'
+import LocationPage      from './pages/LocationPage'
+
 // ── Page transition variants ──
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -95,13 +107,25 @@ function AnimatedRoutes() {
         <Route path="/register" element={<AuthRoute><PageWrap><RegisterPage /></PageWrap></AuthRoute>} />
         <Route path="/otp"      element={<PageWrap><OTPPage /></PageWrap>} />
 
-        {/* Protected */}
+        {/* Main */}
         <Route path="/"              element={<Protected><PageWrap><HomePage /></PageWrap></Protected>} />
         <Route path="/menu"          element={<Protected><PageWrap><MenuPage /></PageWrap></Protected>} />
         <Route path="/voucher"       element={<Protected><PageWrap><VoucherPage /></PageWrap></Protected>} />
         <Route path="/profil"        element={<Protected><PageWrap><ProfilePage /></PageWrap></Protected>} />
         <Route path="/cart"          element={<Protected><PageWrap><CartPage /></PageWrap></Protected>} />
         <Route path="/order-success" element={<Protected><PageWrap><OrderSuccessPage /></PageWrap></Protected>} />
+
+        {/* Sub-pages */}
+        <Route path="/orders"        element={<Protected><PageWrap><OrderHistoryPage /></PageWrap></Protected>} />
+        <Route path="/address"       element={<Protected><PageWrap><AddressPage /></PageWrap></Protected>} />
+        <Route path="/loyalty"       element={<Protected><PageWrap><LoyaltyPage /></PageWrap></Protected>} />
+        <Route path="/security"      element={<Protected><PageWrap><SecurityPage /></PageWrap></Protected>} />
+        <Route path="/about"         element={<Protected><PageWrap><AboutPage /></PageWrap></Protected>} />
+        <Route path="/logout"        element={<Protected><PageWrap><LogoutPage /></PageWrap></Protected>} />
+        <Route path="/redeem"        element={<Protected><PageWrap><RedeemPointsPage /></PageWrap></Protected>} />
+        <Route path="/edit-profile"  element={<Protected><PageWrap><EditProfilePage /></PageWrap></Protected>} />
+        <Route path="/qr-code"       element={<Protected><PageWrap><QRCodePage /></PageWrap></Protected>} />
+        <Route path="/location"      element={<Protected><PageWrap><LocationPage /></PageWrap></Protected>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -134,7 +158,6 @@ export default function App() {
                 {/* Left branding panel — only visible on desktop */}
                 <div className="desktop-branding">
                   <div className="db-content">
-                    {/* Logo + Brand */}
                     <div className="db-logo-group">
                       <img src="/logo.jpg" alt="OkiruDrink" className="db-logo-img" />
                       <div>
@@ -143,7 +166,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Headline */}
                     <div className="db-description">
                       <div className="db-divider" />
                       <h2 className="db-headline">
@@ -157,7 +179,6 @@ export default function App() {
                       </p>
                     </div>
 
-                    {/* Feature cards */}
                     <div className="db-features">
                       <div className="db-feature">
                         <span className="db-feature-icon">🍃</span>
@@ -182,7 +203,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* CTA badges */}
                     <div className="db-cta-row">
                       <span className="db-cta-badge">🌿 Halal & Aman</span>
                       <span className="db-cta-badge">✓ BPOM Terdaftar</span>
@@ -193,10 +213,9 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Phone Frame — contains the actual app */}
+                {/* Phone Frame */}
                 <div className="phone-frame-wrapper">
                   <div className="phone-frame">
-                    {/* Phone notch */}
                     <div className="phone-notch">
                       <div className="phone-notch-inner">
                         <div className="phone-camera" />
@@ -204,12 +223,10 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* App content */}
                     <div className="app-shell">
                       <AnimatedRoutes />
                     </div>
 
-                    {/* Phone home indicator */}
                     <div className="phone-home-indicator">
                       <div className="phone-home-bar" />
                     </div>
