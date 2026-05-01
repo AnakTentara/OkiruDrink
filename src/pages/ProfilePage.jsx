@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield } from 'lucide-react'
+import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
@@ -15,6 +15,26 @@ const menuItems = [
   { icon: Leaf,     label: 'Tentang OkiruDrink', id: 'nav-about' },
 ]
 
+function AnimatedCounter({ value, suffix = '' }) {
+  const [display, setDisplay] = useState(0)
+  useEffect(() => {
+    let start = 0
+    const end = typeof value === 'number' ? value : parseInt(value) || 0
+    if (end === 0) { setDisplay(0); return }
+    const duration = 600
+    const startTime = Date.now()
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.floor(eased * end))
+      if (progress < 1) requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
+  }, [value])
+  return <>{display}{suffix}</>
+}
+
 export default function ProfilePage() {
   const { user, logout } = useUser()
   const navigate          = useNavigate()
@@ -25,6 +45,9 @@ export default function ProfilePage() {
   }
 
   const orders = user?.orders || []
+  const points = user?.points ?? 0
+  const levelProgress = Math.min(points / 500, 1)
+  const nextLevel = points >= 500 ? 'Okiru VIP ✨' : 'Okiru Member'
 
   return (
     <>
@@ -37,9 +60,14 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="profile-avatar">
+          <motion.div
+            className="profile-avatar"
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          >
             {(user?.name?.[0] || 'O').toUpperCase()}
-          </div>
+          </motion.div>
           <div className="profile-info">
             <h2 className="profile-name">{user?.name || 'Pengguna'}</h2>
             <p className="profile-email">{user?.email || ''}</p>
@@ -50,27 +78,80 @@ export default function ProfilePage() {
           </div>
         </motion.div>
 
+        {/* Level Progress */}
+        <motion.div
+          className="level-progress-card px-16"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="lp-header">
+            <div className="lp-left">
+              <Award size={16} color="var(--primary-dark)" />
+              <span className="lp-title">Progress Level</span>
+            </div>
+            <span className="lp-target">{points}/500 pts</span>
+          </div>
+          <div className="lp-bar-track">
+            <motion.div
+              className="lp-bar-fill"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: levelProgress }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            />
+          </div>
+          <p className="lp-hint">
+            {points >= 500
+              ? '🎉 Selamat! Kamu sudah Okiru VIP!'
+              : `${500 - points} pts lagi untuk naik ke Okiru VIP ✨`
+            }
+          </p>
+        </motion.div>
+
         {/* Stats */}
         <div className="profile-stats px-16">
           {[
-            { label: 'Total Poin',   value: `${user?.points ?? 0} pts`, icon: '🌟' },
-            { label: 'Stamp',        value: `${user?.stamps ?? 0}/3`,   icon: '☕' },
-            { label: 'Pesanan',      value: orders.length,              icon: '📦' },
-          ].map(s => (
-            <div key={s.label} className="stat-box">
+            { label: 'Total Poin',   value: points,        suffix: ' pts', icon: '🌟' },
+            { label: 'Stamp',        value: `${user?.stamps ?? 0}/3`, icon: '☕' },
+            { label: 'Pesanan',      value: orders.length,            icon: '📦' },
+          ].map((s, i) => (
+            <motion.div
+              key={s.label}
+              className="stat-box"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 + i * 0.08 }}
+              whileHover={{ y: -3 }}
+            >
               <span className="stat-icon">{s.icon}</span>
-              <span className="stat-value">{s.value}</span>
+              <span className="stat-value">
+                {typeof s.value === 'number'
+                  ? <AnimatedCounter value={s.value} suffix={s.suffix || ''} />
+                  : s.value
+                }
+              </span>
               <span className="stat-label">{s.label}</span>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Recent Orders */}
         {orders.length > 0 && (
-          <div style={{ padding: '0 16px', marginBottom: 12 }}>
+          <motion.div
+            style={{ padding: '0 16px', marginBottom: 12 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
             <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>Pesanan Terakhir</h3>
             {orders.slice(0, 2).map((o, i) => (
-              <div key={i} className="order-row">
+              <motion.div
+                key={i}
+                className="order-row"
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.35 + i * 0.08 }}
+              >
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 600 }}>{o.items?.length ?? 0} item</p>
                   <p style={{ fontSize: 11, color: 'var(--neutral-400)' }}>
@@ -80,19 +161,22 @@ export default function ProfilePage() {
                 <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--primary-dark)' }}>
                   Rp {o.total?.toLocaleString('id-ID')}
                 </span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Menu Items */}
         <div className="profile-menu px-16">
-          {menuItems.map(({ icon: Icon, label, id }) => (
+          {menuItems.map(({ icon: Icon, label, id }, i) => (
             <motion.button
               key={id}
               id={id}
               className="profile-menu-item"
               whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 + i * 0.05 }}
             >
               <div className="pmi-left">
                 <div className="pmi-icon">

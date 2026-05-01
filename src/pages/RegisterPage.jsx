@@ -1,8 +1,50 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { User, Mail, Phone, Lock, Eye, EyeOff, ChevronLeft, ArrowRight } from 'lucide-react'
+import { User, Mail, Phone, Lock, Eye, EyeOff, ChevronLeft, ArrowRight, Check, X } from 'lucide-react'
 import { useUser } from '../context/UserContext'
+
+function PasswordStrength({ password }) {
+  const strength = useMemo(() => {
+    let score = 0
+    if (password.length >= 6) score++
+    if (password.length >= 8) score++
+    if (/[A-Z]/.test(password)) score++
+    if (/[0-9]/.test(password)) score++
+    if (/[^A-Za-z0-9]/.test(password)) score++
+    return score
+  }, [password])
+
+  if (!password) return null
+
+  const labels = ['Sangat Lemah', 'Lemah', 'Cukup', 'Kuat', 'Sangat Kuat']
+  const colors = ['#E05252', '#F5A623', '#F5A623', '#2ECC71', '#1B9A5A']
+  const label = labels[Math.min(strength, 4)]
+  const color = colors[Math.min(strength, 4)]
+
+  return (
+    <div style={{ marginTop: 6 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 4 }}>
+        {[0, 1, 2, 3, 4].map(i => (
+          <motion.div
+            key={i}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: i < strength ? 1 : 0.3 }}
+            style={{
+              flex: 1,
+              height: 3,
+              borderRadius: 2,
+              background: i < strength ? color : 'var(--neutral-200)',
+              transformOrigin: 'left',
+            }}
+            transition={{ duration: 0.3, delay: i * 0.05 }}
+          />
+        ))}
+      </div>
+      <p style={{ fontSize: 11, fontWeight: 600, color, margin: 0 }}>{label}</p>
+    </div>
+  )
+}
 
 export default function RegisterPage() {
   const { register } = useUser()
@@ -27,8 +69,10 @@ export default function RegisterPage() {
     else setError(result.error)
   }
 
+  const passwordsMatch = form.confirm && form.password === form.confirm
+
   return (
-    <div className="auth-page">
+    <div className="auth-page" style={{ overflowY: 'auto' }}>
       {/* Back btn */}
       <motion.div
         style={{ paddingTop: 16, position: 'relative', zIndex: 1 }}
@@ -118,15 +162,26 @@ export default function RegisterPage() {
                 {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            <PasswordStrength password={form.password} />
           </div>
 
           <div className="input-group">
             <label className="input-label">Konfirmasi Password</label>
-            <div className="input-wrapper">
+            <div className="input-wrapper" style={{ position: 'relative' }}>
               <Lock size={16} className="input-icon" />
               <input id="reg-confirm" className="input-field" type="password" name="confirm"
                 placeholder="Ulangi password" value={form.confirm}
-                onChange={handleChange} required autoComplete="new-password" />
+                onChange={handleChange} required autoComplete="new-password"
+                style={{ paddingRight: 40 }} />
+              {form.confirm && (
+                <span style={{
+                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                  color: passwordsMatch ? 'var(--success)' : 'var(--danger)',
+                  display: 'flex'
+                }}>
+                  {passwordsMatch ? <Check size={16} /> : <X size={16} />}
+                </span>
+              )}
             </div>
           </div>
 
@@ -135,7 +190,13 @@ export default function RegisterPage() {
             disabled={loading} style={{ marginTop: 6, gap: 8 }}
             whileTap={{ scale: 0.97 }}
           >
-            {loading ? 'Mendaftar...' : <><span>Daftar Sekarang</span><ArrowRight size={18} /></>}
+            {loading ? (
+              <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1, repeat: Infinity }}>
+                Mendaftar...
+              </motion.span>
+            ) : (
+              <><span>Daftar Sekarang</span><ArrowRight size={18} /></>
+            )}
           </motion.button>
         </form>
       </motion.div>
