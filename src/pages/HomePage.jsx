@@ -1,23 +1,23 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import Header        from '../components/layout/Header'
-import BottomNav     from '../components/layout/BottomNav'
-import HeroCarousel  from '../components/home/HeroCarousel'
-import QuickActions  from '../components/home/QuickActions'
+import Header from '../components/layout/Header'
+import BottomNav from '../components/layout/BottomNav'
+import HeroCarousel from '../components/home/HeroCarousel'
+import QuickActions from '../components/home/QuickActions'
 import VoucherBanner from '../components/home/VoucherBanner'
-import LoyaltyCard   from '../components/home/LoyaltyCard'
-import TodaySpecial  from '../components/home/TodaySpecial'
-import CartButton    from '../components/shared/CartButton'
-import { useUser }   from '../context/UserContext'
+import LoyaltyCard from '../components/home/LoyaltyCard'
+import TodaySpecial from '../components/home/TodaySpecial'
+import CartButton from '../components/shared/CartButton'
+import { useUser } from '../context/UserContext'
 import './HomePage.css'
 
 const section = {
   hidden: { opacity: 0, y: 20 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } }
 }
 const stagger = {
   hidden: {},
-  show:   { transition: { staggerChildren: 0.09 } }
+  show: { transition: { staggerChildren: 0.09 } }
 }
 
 
@@ -29,15 +29,12 @@ export default function HomePage() {
     <>
       <Header />
       <main className="page-content">
-        {/* Spacer diperkecil agar header overlap/menimpa banner sedikit */}
-        <div style={{ height: 51 }} />
+        <div style={{ height: 45 }} />
         <motion.div variants={stagger} initial="hidden" animate="show">
-          {/* ── Hero Carousel ── */}
-          <motion.div variants={section} style={{ marginTop: 4 }}>
+          <motion.div variants={section} style={{ marginTop: 0 }}>
             <HeroCarousel />
           </motion.div>
 
-          {/* ── Quick Actions ── */}
           <motion.div variants={section} style={{ marginTop: 16 }}>
             <QuickActions />
           </motion.div>
