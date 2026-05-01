@@ -126,8 +126,9 @@ export default function MenuPage() {
 
         <div style={{ height: 24 }} />
       </main>
-
-      {selected && <ProductModal product={selected} onClose={() => setSelected(null)} />}
+      <AnimatePresence>
+        {selected && <ProductModal key="product-modal" product={selected} onClose={() => setSelected(null)} />}
+      </AnimatePresence>
       <CartButton />
       <BottomNav />
     </>

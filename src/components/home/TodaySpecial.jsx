@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import ProductModal from '../shared/ProductModal'
@@ -52,7 +52,9 @@ export default function TodaySpecial() {
         ))}
       </div>
 
-      {selected && <ProductModal product={selected} onClose={() => setSelected(null)} />}
+      <AnimatePresence>
+        {selected && <ProductModal key="product-modal" product={selected} onClose={() => setSelected(null)} />}
+      </AnimatePresence>
     </section>
   )
 }
