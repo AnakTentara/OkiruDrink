@@ -18,14 +18,13 @@
   border-bottom: 1px solid transparent;
   z-index: 100;
   overflow: hidden;
-  border-radius: 0 0 0 0;            /* Atas flat, bawah dikontrol JS */
+  border-radius: 0 0 24px 24px;      /* Atas flat, bawah SELALU rounded melengkung */
   will-change: height;
 }
 
 /* is-home: default tinggi penuh sebelum JS update pertama */
 .app-header.is-home {
   height: 144px;
-  border-radius: 0 0 24px 24px;      /* Atas flat, bawah rounded */
 }
 
 /* ── Top accent line — fade in via CSS (.scrolled class) ── */
