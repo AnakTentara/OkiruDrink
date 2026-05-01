@@ -46,7 +46,7 @@
   --transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  --header-h:     94px; /* Slimmer header: 56px content + 38px safe area */
+  --header-h:     64px;  /* 12px padding atas + ~40px konten + 12px padding bawah */
   --nav-h:        74px; /* Shorter magic tab bar */
   --max-w:        430px;
   --phone-h:      812px;
@@ -351,16 +351,11 @@ body {
   height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
-  padding-top: var(--header-h);
+  padding-top: calc(var(--header-h) + 8px);
   padding-bottom: calc(var(--nav-h) + 16px);
   scroll-behavior: smooth;
 }
 .page-content::-webkit-scrollbar { display: none; }
-
-/* Overlap mode for home banner */
-.page-content.has-hero {
-  padding-top: 0;
-}
 
 /* ============================================================
    MOBILE RESPONSIVE — remove phone frame, go full-screen

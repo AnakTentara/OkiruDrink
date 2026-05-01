@@ -16,34 +16,27 @@ export default function Header() {
   const { user } = useUser()
   const navigate  = useNavigate()
   const location  = useLocation()
-  const [scrollY, setScrollY] = useState(0)
+  const [scrolled, setScrolled] = useState(false)
   const isHome = location.pathname === '/'
-  const scrollThreshold = isHome ? 80 : 20
 
   useEffect(() => {
     const pageContent = document.querySelector('.page-content')
     if (!pageContent) return
 
     const handleScroll = () => {
-      setScrollY(pageContent.scrollTop)
+      setScrolled(pageContent.scrollTop > 10)
     }
 
     pageContent.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
+    handleScroll() // initial check
 
     return () => pageContent.removeEventListener('scroll', handleScroll)
-  }, [location.pathname])
-
-  const scrollProgress = Math.min(1, scrollY / scrollThreshold)
-  const isScrolled = scrollY > 20
+  }, [])
 
   const greeting = getGreeting()
 
   return (
-    <header 
-      className={`app-header ${isScrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}
-      style={{ '--scroll-progress': scrollProgress }}
-    >
+    <header className={`app-header ${scrolled ? 'scrolled' : ''} ${isHome ? 'is-home' : ''}`}>
       <div className="header-top-row">
         {/* Left: Logo + level */}
         <button className="header-brand" onClick={() => navigate('/')}>
@@ -56,17 +49,17 @@ export default function Header() {
             </span>
           </div>
         </button>
- 
+
         {/* Center: Location */}
         <button className="header-location">
           <MapPin size={13} className="location-pin" />
           <span className="location-text">Muara Enim</span>
           <ChevronDown size={13} />
         </button>
- 
+
         {/* Right: Points + QR */}
         <div className="header-right">
-          {(!isHome || isScrolled) && (
+          {(!isHome || scrolled) && (
             <div className="header-points">
               <span className="points-icon">🌟</span>
               <span className="points-val">{user?.points ?? 0} pts</span>

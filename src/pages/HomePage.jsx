@@ -28,7 +28,9 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="page-content has-hero">
+      <main className="page-content">
+        {/* Spacer = is-home header height (144px) - page-content padding-top (72px) = 72px breathing room */}
+        <div style={{ height: 80 }} />
         <motion.div variants={stagger} initial="hidden" animate="show">
           {/* ── Hero Carousel ── */}
           <motion.div variants={section} style={{ marginTop: 4 }}>
