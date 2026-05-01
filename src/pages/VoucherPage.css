@@ -76,8 +76,9 @@
   background: var(--surface);
   border: 1.5px solid rgba(0,0,0,0.06);
   border-radius: var(--radius-md);
-  padding: 16px 16px 16px 20px;
+  padding: 16px 16px 12px 20px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   box-shadow: var(--shadow-sm);
@@ -205,14 +206,8 @@
 
 /* ── Syarat & Ketentuan ── */
 .vc-terms-section {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  /* Reset position for terms if needed */
-  position: relative;
-  grid-column: 1 / -1;
-  margin-top: 8px;
+  width: 100%;
+  margin-top: 4px;
 }
 .vc-terms-toggle {
   display: flex;

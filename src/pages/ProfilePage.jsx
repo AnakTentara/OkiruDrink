@@ -4,7 +4,7 @@ import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3
 import { useNavigate } from 'react-router-dom'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
-import { useUser } from '../context/UserContext'
+import { useUser, getLevelInfo } from '../context/UserContext'
 import './ProfilePage.css'
 
 const menuItems = [
@@ -44,7 +44,8 @@ export default function ProfilePage() {
 
   const orders = user?.orders || []
   const points = user?.points ?? 0
-  const levelProgress = Math.min(points / 500, 1)
+  const levelInfo = getLevelInfo(user?.level || 'Basic')
+  const levelProgress = levelInfo.nextMin ? Math.min(points / levelInfo.nextMin, 1) : 1
 
   return (
     <>
@@ -68,9 +69,9 @@ export default function ProfilePage() {
           <div className="profile-info">
             <h2 className="profile-name">{user?.name || 'Pengguna'}</h2>
             <p className="profile-email">{user?.email || ''}</p>
-            <div className="profile-level">
-              <Leaf size={12} />
-              {user?.level || 'Okiru Member'}
+            <div className="profile-level" onClick={() => navigate('/member-benefits')} style={{ cursor: 'pointer' }}>
+              <span>{levelInfo.icon}</span>
+              {levelInfo.label}
             </div>
           </div>
           <motion.button
