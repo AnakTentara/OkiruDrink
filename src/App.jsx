@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   BrowserRouter,
   Routes,
@@ -7,9 +7,10 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from 'react-hot-toast'
 
-import { UserProvider, useUser } from './context/UserContext'
-import { CartProvider }          from './context/CartContext'
+import { useUserStore } from './store/useUserStore'
 
 import SplashScreen     from './components/shared/SplashScreen'
 import LoginPage        from './pages/LoginPage'
@@ -34,6 +35,15 @@ import EditProfilePage   from './pages/EditProfilePage'
 import QRCodePage        from './pages/QRCodePage'
 import LocationPage      from './pages/LocationPage'
 import MemberBenefitsPage from './pages/MemberBenefitsPage'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+})
 
 // ── Page transition variants ──
 const pageVariants = {
@@ -65,9 +75,9 @@ function PageWrap({ children }) {
   )
 }
 
-// ── Protected Route — redirect to /login if not authenticated ──
+// ── Protected Route ──
 function Protected({ children }) {
-  const { user, loading } = useUser()
+  const { user, loading } = useUserStore()
   const location = useLocation()
 
   if (loading) {
@@ -97,9 +107,9 @@ function Protected({ children }) {
   return children
 }
 
-// ── Auth Route — redirect to / if already logged in ──
+// ── Auth Route ──
 function AuthRoute({ children }) {
-  const { user, loading } = useUser()
+  const { user, loading } = useUserStore()
   if (loading) return null
   if (user) return <Navigate to="/" replace />
   return children
@@ -148,11 +158,37 @@ function AnimatedRoutes() {
 export default function App() {
   const [splashDone, setSplashDone] = useState(false)
   const handleSplashFinish = useCallback(() => setSplashDone(true), [])
+  const { setUser, setLoading } = useUserStore()
+
+  useEffect(() => {
+    // Attempt auto-login if token exists
+    const token = localStorage.getItem('okiru_token')
+    if (token) {
+      setLoading(true)
+      fetch('http://localhost:2027/api/users/me', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) setUser(data.user)
+        else localStorage.removeItem('okiru_token')
+      })
+      .catch(() => localStorage.removeItem('okiru_token'))
+      .finally(() => setLoading(false))
+    }
+  }, [setUser, setLoading])
 
   return (
-    <BrowserRouter>
-      <UserProvider>
-        <CartProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+          <Toaster position="top-center" toastOptions={{
+            style: {
+              background: '#333',
+              color: '#fff',
+              fontSize: '14px',
+              borderRadius: '99px'
+            }
+          }} />
           {/* Splash Screen */}
           <AnimatePresence>
             {!splashDone && <SplashScreen key="splash" onFinish={handleSplashFinish} />}
@@ -264,8 +300,7 @@ export default function App() {
               </div>
             </motion.div>
           )}
-        </CartProvider>
-      </UserProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </QueryClientProvider>
   )
 }

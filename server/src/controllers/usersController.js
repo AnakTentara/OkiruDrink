@@ -66,10 +66,14 @@ exports.getVouchers = async (req, res, next) => {
 }
 
 exports.getOrders = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1
+  const limit = parseInt(req.query.limit) || 10
+  const offset = (page - 1) * limit
+
   try {
     const [orders] = await pool.query(
-      'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC',
-      [req.user.id]
+      'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+      [req.user.id, limit, offset]
     )
     for (const order of orders) {
       const [items] = await pool.query(
@@ -80,7 +84,7 @@ exports.getOrders = async (req, res, next) => {
       )
       order.items = items
     }
-    return res.json({ ok: true, orders })
+    return res.json({ ok: true, orders, page, limit })
   } catch (err) {
     next(err)
   }
