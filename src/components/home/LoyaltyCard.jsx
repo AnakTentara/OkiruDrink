@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Check, Coffee } from 'lucide-react'
-import { useUser } from '../../context/UserContext'
+import { useUserStore as useUser } from '../../store/useUserStore'
 import './LoyaltyCard.css'
 
 const TOTAL_STAMPS = 3

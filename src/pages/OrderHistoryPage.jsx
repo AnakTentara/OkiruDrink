@@ -2,7 +2,7 @@ import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Package, Clock, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useUser } from '../context/UserContext'
+import { useUserStore as useUser } from '../store/useUserStore'
 import './SubPages.css'
 
 const formatRp = (n) => `Rp ${(n || 0).toLocaleString('id-ID')}`

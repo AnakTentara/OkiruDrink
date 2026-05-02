@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ChevronLeft, Smartphone } from 'lucide-react'
-import { useUser } from '../context/UserContext'
+import { useUserStore as useUser } from '../store/useUserStore'
 
 export default function OTPPage() {
   const { verifyOTP } = useUser()

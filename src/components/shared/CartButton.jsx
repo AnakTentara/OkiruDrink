@@ -2,7 +2,7 @@ import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingBag } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useCart } from '../../context/CartContext'
+import { useCartStore as useCart } from '../../store/useCartStore'
 import './CartButton.css'
 
 export default function CartButton() {

@@ -8,7 +8,7 @@ import VoucherBanner from '../components/home/VoucherBanner'
 import LoyaltyCard from '../components/home/LoyaltyCard'
 import TodaySpecial from '../components/home/TodaySpecial'
 import CartButton from '../components/shared/CartButton'
-import { useUser } from '../context/UserContext'
+import { useUserStore as useUser } from '../store/useUserStore'
 import './HomePage.css'
 
 const section = {

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Tag, Clock, CheckCircle, Copy, Check, FileText, ChevronRight } from 'lucide-react'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
-import { useUser } from '../context/UserContext'
+import { useUserStore as useUser } from '../store/useUserStore'
 import './VoucherPage.css'
 
 // Fallback vouchers for display (in case user has none)

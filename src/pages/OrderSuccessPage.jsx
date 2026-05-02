@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle, Home, ShoppingBag, Package, Coffee, Clock, Share2 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useUser } from '../context/UserContext'
-import { useCart } from '../context/CartContext'
+import { useUserStore as useUser } from '../store/useUserStore'
+import { useCartStore as useCart } from '../store/useCartStore'
 import './OrderSuccessPage.css'
 
 // Random confetti pieces

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Camera, User, Mail, Phone, Save } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useUser } from '../context/UserContext'
+import { useUserStore as useUser } from '../store/useUserStore'
 import './SubPages.css'
 
 export default function EditProfilePage() {

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Lock, Fingerprint, Shield, ChevronRight, Eye, EyeOff } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useUser } from '../context/UserContext'
+import { useUserStore as useUser } from '../store/useUserStore'
 import './SubPages.css'
 
 export default function SecurityPage() {

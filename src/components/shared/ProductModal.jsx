@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Plus, Minus, ShoppingBag, Leaf, ChevronLeft, Check, MessageSquare } from 'lucide-react'
-import { useCart } from '../../context/CartContext'
+import { useCartStore as useCart } from '../../store/useCartStore'
 import './ProductModal.css'
 
 const formatRp = (n) => `Rp ${n.toLocaleString('id-ID')}`

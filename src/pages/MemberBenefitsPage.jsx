@@ -2,7 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Check, ChevronRight, Crown, Star, Award, Gem } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useUser, ALL_LEVELS } from '../context/UserContext'
+import { useUserStore as useUser, ALL_LEVELS } from '../store/useUserStore'
 import './MemberBenefitsPage.css'
 
 export default function MemberBenefitsPage() {

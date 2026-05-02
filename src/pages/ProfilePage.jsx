@@ -4,7 +4,7 @@ import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3
 import { useNavigate } from 'react-router-dom'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
-import { useUser, getLevelInfo } from '../context/UserContext'
+import { useUserStore as useUser, getLevelInfo } from '../store/useUserStore'
 import './ProfilePage.css'
 
 const menuItems = [

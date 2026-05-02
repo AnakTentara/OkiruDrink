@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { MapPin, ChevronDown, QrCode } from 'lucide-react'
-import { useUser } from '../../context/UserContext'
+import { useUserStore as useUser } from '../../store/useUserStore'
 import './Header.css'
 
 function getGreeting() {

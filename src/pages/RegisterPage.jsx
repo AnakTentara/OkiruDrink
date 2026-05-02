@@ -2,7 +2,9 @@ import React, { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { User, Mail, Phone, Lock, Eye, EyeOff, ChevronLeft, ArrowRight, Check, X } from 'lucide-react'
-import { useUser } from '../context/UserContext'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
+import '../styles/index.css'
 
 function PasswordStrength({ password }) {
   const strength = useMemo(() => {
@@ -46,27 +48,41 @@ function PasswordStrength({ password }) {
   )
 }
 
+const registerApi = async (data) => {
+  const res = await fetch('http://localhost:2027/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  const json = await res.json()
+  if (!json.ok) throw new Error(json.error)
+  return json
+}
+
 export default function RegisterPage() {
-  const { register } = useUser()
-  const navigate      = useNavigate()
-  const [form, setForm]       = useState({ name: '', email: '', phone: '', password: '', confirm: '' })
-  const [showPw, setShowPw]   = useState(false)
-  const [error, setError]     = useState('')
-  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirm: '' })
+  const [showPw, setShowPw] = useState(false)
+
+  const registerMutation = useMutation({
+    mutationFn: registerApi,
+    onSuccess: (data) => {
+      // In a real app we'd save token or go to OTP
+      toast.success('Pendaftaran berhasil! Silakan verifikasi OTP.')
+      navigate('/otp')
+    },
+    onError: (err) => {
+      toast.error(err.message || 'Pendaftaran gagal.')
+    }
+  })
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    setError('')
-    if (form.password !== form.confirm) { setError('Password dan konfirmasi tidak sama.'); return }
-    if (form.password.length < 6)       { setError('Password minimal 6 karakter.'); return }
-    setLoading(true)
-    await new Promise(r => setTimeout(r, 700))
-    const result = register({ name: form.name, email: form.email, phone: form.phone, password: form.password })
-    setLoading(false)
-    if (result.ok) navigate('/otp')
-    else setError(result.error)
+    if (form.password !== form.confirm) { toast.error('Password dan konfirmasi tidak sama.'); return }
+    if (form.password.length < 6) { toast.error('Password minimal 6 karakter.'); return }
+    registerMutation.mutate({ name: form.name, email: form.email, phone: form.phone, password: form.password })
   }
 
   const passwordsMatch = form.confirm && form.password === form.confirm
@@ -79,10 +95,12 @@ export default function RegisterPage() {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       >
         <button onClick={() => navigate(-1)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer',
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
             display: 'flex', alignItems: 'center', gap: 4,
             color: 'var(--neutral-600)', fontFamily: 'var(--font)',
-            fontSize: 14, fontWeight: 700, padding: '8px 0' }}>
+            fontSize: 14, fontWeight: 700, padding: '8px 0'
+          }}>
           <ChevronLeft size={18} /> Kembali
         </button>
       </motion.div>
@@ -156,9 +174,11 @@ export default function RegisterPage() {
                 onChange={handleChange} required style={{ paddingRight: 44 }}
                 autoComplete="new-password" />
               <button type="button" onClick={() => setShowPw(s => !s)}
-                style={{ position: 'absolute', right: 12, top: '50%',
+                style={{
+                  position: 'absolute', right: 12, top: '50%',
                   transform: 'translateY(-50%)', background: 'none', border: 'none',
-                  cursor: 'pointer', color: 'var(--neutral-400)', display: 'flex' }}>
+                  cursor: 'pointer', color: 'var(--neutral-400)', display: 'flex'
+                }}>
                 {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -187,10 +207,10 @@ export default function RegisterPage() {
 
           <motion.button id="reg-submit" type="submit"
             className="btn btn-primary btn-full btn-lg"
-            disabled={loading} style={{ marginTop: 6, gap: 8 }}
+            disabled={registerMutation.isPending} style={{ marginTop: 6, gap: 8 }}
             whileTap={{ scale: 0.97 }}
           >
-            {loading ? (
+            {registerMutation.isPending ? (
               <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1, repeat: Infinity }}>
                 Mendaftar...
               </motion.span>
