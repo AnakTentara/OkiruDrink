@@ -35,6 +35,7 @@ import EditProfilePage   from './pages/EditProfilePage'
 import QRCodePage        from './pages/QRCodePage'
 import LocationPage      from './pages/LocationPage'
 import MemberBenefitsPage from './pages/MemberBenefitsPage'
+import LiveChatPage     from './pages/LiveChatPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -147,6 +148,7 @@ function AnimatedRoutes() {
         <Route path="/qr-code"       element={<Protected><PageWrap><QRCodePage /></PageWrap></Protected>} />
         <Route path="/location"      element={<Protected><PageWrap><LocationPage /></PageWrap></Protected>} />
         <Route path="/member-benefits" element={<Protected><PageWrap><MemberBenefitsPage /></PageWrap></Protected>} />
+        <Route path="/live-chat"      element={<Protected><PageWrap><LiveChatPage /></PageWrap></Protected>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

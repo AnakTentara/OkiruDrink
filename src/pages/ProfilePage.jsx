@@ -255,7 +255,7 @@ export default function ProfilePage() {
             </motion.button>
             
             <motion.button
-              onClick={() => toast('Fitur Live Chat Website akan segera hadir!', { icon: '💬' })}
+              onClick={() => navigate('/live-chat')}
               whileTap={{ scale: 0.95 }}
               style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 8px', background: 'var(--primary-xlight)', border: '1px solid rgba(155,196,56,0.3)', borderRadius: 'var(--radius-md)', cursor: 'pointer', color: 'var(--primary-dark)' }}
             >
