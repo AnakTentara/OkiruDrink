@@ -6,11 +6,18 @@ import { useUserStore as useUser } from '../store/useUserStore'
 import './SubPages.css'
 
 const rewards = [
-  { id: 'r1', name: 'Diskon 10% OkiruDrink', desc: 'Voucher diskon potongan 10% tanpa maksimal nominal.', cost: 50, icon: '🏷️', bg: '#EFF8D6' },
-  { id: 'r2', name: 'Gratis Ongkir Instan', desc: 'Voucher bebas ongkos kirim ke seluruh area coverage OkiruDrink.', cost: 80, icon: '🚚', bg: '#E8F0FB' },
-  { id: 'r3', name: 'Free 1 Cup Varian Apapun', desc: 'Tukarkan dengan 1 minuman ukuran reguler gratis.', cost: 150, icon: '🍵', bg: '#FEF3CD' },
-  { id: 'r4', name: 'Exclusive Tumbler Okiru', desc: 'Tumbler stainless premium tahan panas/dingin 12 jam.', cost: 500, icon: '🏆', bg: '#F3E8FB' },
-  { id: 'r5', name: 'Ultimate Wellness Bundle', desc: 'Paket eksklusif 7 botol Torbangun & Jintan campuran.', cost: 800, icon: '📦', bg: '#FFE5E5' },
+  { id: 'r1',  name: 'Diskon 5%',              desc: 'Voucher diskon 5% untuk 1x pembelian berikutnya (maks. Rp 10.000)',              cost: 30,   icon: '🏷️',  bg: '#EFF8D6' },
+  { id: 'r2',  name: 'Diskon 10%',             desc: 'Voucher diskon 10% untuk 1x pembelian berikutnya (maks. Rp 20.000)',             cost: 50,   icon: '💳',  bg: '#E8F5E9' },
+  { id: 'r3',  name: 'Diskon 15%',             desc: 'Voucher diskon 15% untuk 1x pembelian berikutnya (maks. Rp 30.000)',             cost: 80,   icon: '🎟️',  bg: '#F0F4FF' },
+  { id: 'r4',  name: 'Gratis Ongkir',          desc: 'Gratis ongkos kirim tanpa minimum belanja untuk 1x pengiriman',                  cost: 60,   icon: '🚚',  bg: '#E8F0FB' },
+  { id: 'r5',  name: '1 Cup Gratis (Regular)', desc: '1 cup ukuran reguler varian pilihan (Teh Jintan / Torbangun Original)',          cost: 150,  icon: '🍵',  bg: '#FEF3CD' },
+  { id: 'r6',  name: '1 Cup Gratis (Large)',   desc: '1 cup ukuran large varian pilihan bebas',                                       cost: 200,  icon: '🧋',  bg: '#FFF3E0' },
+  { id: 'r7',  name: 'Stamp Bonus',            desc: 'Tambah 1 Stamp langsung ke kartu loyalitasmu',                                  cost: 100,  icon: '☕',  bg: '#FCE4EC' },
+  { id: 'r8',  name: 'Voucher Ulang Tahun',    desc: 'Voucher gratis 1 minuman spesial di hari ulang tahunmu (valid 7 hari)',          cost: 300,  icon: '🎂',  bg: '#FDE7F3' },
+  { id: 'r9',  name: 'Merchandise Totebag',    desc: 'Totebag kanvas OkiruDrink limited edition (stok terbatas)',                     cost: 400,  icon: '👜',  bg: '#E8F5E9' },
+  { id: 'r10', name: 'Tumbler Premium',        desc: 'Tumbler OkiruDrink edisi eksklusif 350ml anti-tumpah + logo emboss',            cost: 500,  icon: '🏆',  bg: '#F3E8FB' },
+  { id: 'r11', name: 'Paket Teh 1 Minggu',     desc: '7 botol Teh Jintan/Torbangun campuran semua varian (dikirim ke rumah)',         cost: 800,  icon: '📦',  bg: '#FFE5E5' },
+  { id: 'r12', name: 'Donasi 100 Poin',        desc: 'Donasimu dikonversi ke program beasiswa anak petani rempah lokal',              cost: 100,  icon: '💚',  bg: '#E8F5E9' },
 ]
 
 export default function RedeemPointsPage() {
@@ -44,18 +51,17 @@ export default function RedeemPointsPage() {
             color: '#fff',
             textAlign: 'center',
             marginBottom: 20,
-            boxShadow: '0 8px 24px rgba(155,196,56,0.25)'
           }}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <p style={{ fontSize: 13, opacity: 0.9, fontWeight: 700, letterSpacing: 0.5 }}>POIN TERSEDIA</p>
-          <p style={{ fontSize: 44, fontWeight: 900, margin: '4px 0', textShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>{points.toLocaleString('id-ID')}</p>
-          <p style={{ fontSize: 13, opacity: 0.85 }}>Tukarkan poinmu dengan hadiah eksklusif!</p>
+          <p style={{ fontSize: 13, opacity: 0.8, fontWeight: 600 }}>Poin Tersedia</p>
+          <p style={{ fontSize: 40, fontWeight: 800, margin: '4px 0' }}>{points}</p>
+          <p style={{ fontSize: 12, opacity: 0.7 }}>Tukarkan poinmu dengan hadiah menarik!</p>
         </motion.div>
 
         {/* Rewards list */}
-        <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 12 }}>Katalog Hadiah</h3>
+        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}>Hadiah Tersedia</h3>
         {rewards.map((r, i) => (
           <motion.div
             key={r.id}
@@ -64,13 +70,12 @@ export default function RedeemPointsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + i * 0.06 }}
           >
-            <div className="rc-icon" style={{ background: r.bg, border: '1px solid rgba(0,0,0,0.03)' }}>{r.icon}</div>
+            <div className="rc-icon" style={{ background: r.bg }}>{r.icon}</div>
             <div className="rc-info">
-              <p className="rc-name" style={{ fontWeight: 800 }}>{r.name}</p>
-              <p className="rc-desc" style={{ lineHeight: 1.4 }}>{r.desc}</p>
+              <p className="rc-name">{r.name}</p>
+              <p className="rc-desc">{r.desc}</p>
               <div className="rc-cost">
-                <Star size={12} color="var(--primary-dark)" fill="var(--primary-dark)" /> 
-                <span style={{ fontWeight: 800, color: 'var(--primary-dark)' }}>{r.cost.toLocaleString('id-ID')} pts</span>
+                <Star size={12} /> {r.cost} pts
               </div>
             </div>
             <AnimatePresence mode="wait">
