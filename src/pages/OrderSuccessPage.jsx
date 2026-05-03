@@ -26,12 +26,12 @@ export default function OrderSuccessPage() {
   const navigate        = useNavigate()
   const location        = useLocation()
   const { addOrder, addPoints } = useUser()
-  const { cart, clearCart }     = useCart()
+  const { items, getCartTotal, clearCart } = useCart()
   const [orderNum] = useState(() => `#OKR${Date.now().toString().slice(-6)}`)
 
   const orderData = location.state?.order || {
-    items: cart.items,
-    total: cart.totalPrice,
+    items: items,
+    total: getCartTotal(),
   }
 
   useEffect(() => {

@@ -8,7 +8,10 @@ export const useUserStore = create((set) => ({
   logout: () => {
     localStorage.removeItem('okiru_token')
     set({ user: null })
-  }
+  },
+  addOrder: () => {},
+  addPoints: () => {},
+  useVoucher: () => {}
 }))
 
 export const ALL_LEVELS = [
