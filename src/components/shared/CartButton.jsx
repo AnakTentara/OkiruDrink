@@ -6,7 +6,12 @@ import { useCartStore as useCart } from '../../store/useCartStore'
 import './CartButton.css'
 
 export default function CartButton() {
-  const { cart } = useCart()
+  const { items, getCartCount, getCartTotal } = useCart()
+  const cart = {
+    items,
+    totalItems: getCartCount(),
+    totalPrice: getCartTotal()
+  }
   const navigate  = useNavigate()
 
   if (cart.totalItems === 0) return null

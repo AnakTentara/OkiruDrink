@@ -12,7 +12,12 @@ import './CartPage.css'
 const formatRp = (n) => `Rp ${n.toLocaleString('id-ID')}`
 
 export default function CartPage() {
-  const { cart, removeItem, updateQty, clearCart } = useCart()
+  const { items, removeItem, updateQty, clearCart, getCartCount, getCartTotal } = useCart()
+  const cart = {
+    items,
+    totalItems: getCartCount(),
+    totalPrice: getCartTotal()
+  }
   const { user, addOrder, addPoints, useVoucher } = useUser()
   const navigate = useNavigate()
   const [deliveryMode, setDeliveryMode] = useState('pickup')
