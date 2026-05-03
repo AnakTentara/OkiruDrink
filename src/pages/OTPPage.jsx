@@ -62,15 +62,30 @@ export default function OTPPage() {
     const code = digits.join('')
     setError('')
     setLoading(true)
-    await new Promise(r => setTimeout(r, 800))
-    const result = verifyOTP(code)
-    setLoading(false)
-    if (result.ok) {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: pending?.email, phone: pending?.phone, code })
+      })
+      const json = await res.json()
+      if (!json.ok) throw new Error(json.error)
+      
+      // Verification success
+      localStorage.setItem('okiru_token', json.token)
+      localStorage.removeItem('okiru_pending_register')
+      
+      // Update global user store
+      const { useUserStore } = await import('../store/useUserStore')
+      useUserStore.getState().setUser(json.user)
+      
       navigate('/', { replace: true })
-    } else {
-      setError(result.error)
+    } catch (err) {
+      setError(err.message || 'Verifikasi gagal')
       setDigits(['', '', '', '', '', ''])
       inputs.current[0]?.focus()
+    } finally {
+      setLoading(false)
     }
   }
 

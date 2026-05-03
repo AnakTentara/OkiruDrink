@@ -67,8 +67,8 @@ export default function RegisterPage() {
   const registerMutation = useMutation({
     mutationFn: registerApi,
     onSuccess: (data) => {
-      // In a real app we'd save token or go to OTP
-      toast.success('Pendaftaran berhasil! Silakan verifikasi OTP.')
+      localStorage.setItem('okiru_pending_register', JSON.stringify({ email: form.email, phone: form.phone }))
+      toast.success('Pendaftaran berhasil! Silakan cek WhatsApp untuk kode OTP.')
       navigate('/otp')
     },
     onError: (err) => {

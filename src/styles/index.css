@@ -593,7 +593,15 @@ small { font-size: 12px; color: var(--neutral-400); }
   margin-bottom: 12px;
 }
 .section-title { font-size: 16px; font-weight: 700; color: var(--neutral-900); }
-.section-link  { font-size: 13px; font-weight: 600; color: var(--primary-dark); }
+.section-link  { 
+  font-size: 13px; 
+  font-weight: 600; 
+  color: var(--primary-dark); 
+  background: transparent; 
+  border: none; 
+  padding: 0; 
+  cursor: pointer; 
+}
 
 /* ── Divider ── */
 .divider { height: 8px; background: var(--neutral-100); margin: 8px 0; }

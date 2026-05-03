@@ -5,6 +5,7 @@ const { validate } = require('../middlewares/validate')
 const { registerSchema, loginSchema } = require('../validations/auth')
 
 router.post('/register', validate(registerSchema), authController.register)
+router.post('/verify-otp', authController.verifyOTP)
 router.post('/login', validate(loginSchema), authController.login)
 
 module.exports = router

