@@ -11,7 +11,9 @@ export const useUserStore = create((set) => ({
   },
   addOrder: () => {},
   addPoints: () => {},
-  useVoucher: () => {}
+  useVoucher: () => {},
+  verifyOTP: () => {},
+  addStamp: () => {}
 }))
 
 export const ALL_LEVELS = [
