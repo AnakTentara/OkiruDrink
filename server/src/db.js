@@ -36,8 +36,19 @@ async function testConnection() {
       console.log('✅ Added otp_expiry column')
     } catch(e) { /* Ignore if exists */ }
 
-    // Seed products if empty
+    // Ensure products table exists and seed if empty
     try {
+      await conn.query(`
+        CREATE TABLE IF NOT EXISTS products (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          description TEXT,
+          price INT NOT NULL,
+          category VARCHAR(50),
+          image VARCHAR(255),
+          badge VARCHAR(50)
+        )
+      `)
       const [prows] = await conn.query('SELECT COUNT(*) as count FROM products')
       if (prows[0].count === 0) {
         console.log('🌱 Seeding default products...')
