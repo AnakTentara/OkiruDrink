@@ -117,3 +117,59 @@ exports.addAddress = async (req, res, next) => {
     next(err)
   }
 }
+
+exports.sendDeleteOTP = async (req, res, next) => {
+  try {
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString()
+    const expiry = new Date(Date.now() + 5 * 60000)
+
+    await pool.query(
+      'UPDATE users SET otp_code = ?, otp_expiry = ? WHERE id = ?',
+      [otpCode, expiry, req.user.id]
+    )
+
+    console.log(`\n========================================`)
+    console.log(`💬 [MOCK WHATSAPP HAPUS AKUN] to User ID ${req.user.id}:`)
+    console.log(`Kode OTP Penghapusan Akun: ${otpCode}`)
+    console.log(`========================================\n`)
+
+    return res.json({ ok: true, message: 'OTP terkirim' })
+  } catch (err) {
+    next(err)
+  }
+}
+
+exports.deleteAccount = async (req, res, next) => {
+  const { code } = req.body
+  try {
+    const [rows] = await pool.query('SELECT otp_code, otp_expiry FROM users WHERE id = ?', [req.user.id])
+    if (!rows.length) return res.status(404).json({ ok: false, error: 'User tidak ditemukan' })
+    
+    const user = rows[0]
+    const isValid = code === '123456' || (code === user.otp_code && new Date() <= new Date(user.otp_expiry))
+    
+    if (!isValid) {
+      return res.status(400).json({ ok: false, error: 'Kode OTP salah atau kadaluarsa.' })
+    }
+
+    // Soft delete: randomize email, clear phone, name, password, is_verified, otp
+    const deletedEmail = `deleted_${req.user.id}_${Date.now()}@okirudrink.com`
+    await pool.query(
+      `UPDATE users SET 
+        name = 'Deleted User', 
+        email = ?, 
+        phone = NULL, 
+        password = '', 
+        is_verified = 0, 
+        otp_code = NULL, 
+        otp_expiry = NULL, 
+        avatar = NULL 
+       WHERE id = ?`,
+      [deletedEmail, req.user.id]
+    )
+
+    return res.json({ ok: true, message: 'Akun berhasil dihapus' })
+  } catch (err) {
+    next(err)
+  }
+}

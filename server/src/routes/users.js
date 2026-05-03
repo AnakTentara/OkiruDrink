@@ -14,4 +14,7 @@ router.get('/me/orders', usersController.getOrders)
 router.get('/me/addresses', usersController.getAddresses)
 router.post('/me/addresses', usersController.addAddress)
 
+router.post('/me/delete-otp', usersController.sendDeleteOTP)
+router.delete('/me', usersController.deleteAccount)
+
 module.exports = router

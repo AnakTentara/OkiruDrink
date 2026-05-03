@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, Lock, Fingerprint, Shield, ChevronRight, Eye, EyeOff } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore as useUser } from '../store/useUserStore'
+import toast from 'react-hot-toast'
 import './SubPages.css'
 
 export default function SecurityPage() {
@@ -14,6 +15,56 @@ export default function SecurityPage() {
   const [message, setMessage] = useState('')
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+
+  const [showDeleteOTP, setShowDeleteOTP] = useState(false)
+  const [deleteOTP, setDeleteOTP] = useState('')
+  const [loadingDelete, setLoadingDelete] = useState(false)
+
+  const handleRequestDelete = async () => {
+    if (!window.confirm('PERINGATAN! Penghapusan akun tidak dapat dibatalkan. Apakah Anda yakin ingin melanjutkan?')) return
+    setLoadingDelete(true)
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/delete-otp`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('okiru_token')}` }
+      })
+      const json = await res.json()
+      if (!json.ok) throw new Error(json.error)
+      setShowDeleteOTP(true)
+      toast.success('Kode OTP penghapusan telah dikirim.')
+    } catch (err) {
+      toast.error(err.message || 'Gagal meminta OTP')
+    } finally {
+      setLoadingDelete(false)
+    }
+  }
+
+  const handleDeleteConfirm = async (e) => {
+    e.preventDefault()
+    setLoadingDelete(true)
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
+        method: 'DELETE',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('okiru_token')}` 
+        },
+        body: JSON.stringify({ code: deleteOTP })
+      })
+      const json = await res.json()
+      if (!json.ok) throw new Error(json.error)
+      
+      toast.success('Akun Anda berhasil dihapus.')
+      localStorage.removeItem('okiru_token')
+      useUser.getState().clearUser()
+      navigate('/login', { replace: true })
+    } catch (err) {
+      toast.error(err.message || 'Gagal menghapus akun')
+      setDeleteOTP('')
+    } finally {
+      setLoadingDelete(false)
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -130,6 +181,59 @@ export default function SecurityPage() {
             </div>
           </motion.form>
         )}
+
+        {/* Delete Account Section */}
+        <div style={{ marginTop: 40, paddingTop: 20, borderTop: '1px solid var(--neutral-200)' }}>
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--danger)', marginBottom: 8 }}>Area Berbahaya</h3>
+          <p style={{ fontSize: 13, color: 'var(--neutral-500)', marginBottom: 16 }}>
+            Penghapusan akun bersifat permanen. Semua data personal, voucher, dan poin akan dianonimkan atau dihapus.
+          </p>
+          
+          {!showDeleteOTP ? (
+            <button 
+              className="btn btn-full" 
+              style={{ background: '#FFE5E5', color: 'var(--danger)' }}
+              onClick={handleRequestDelete}
+              disabled={loadingDelete}
+            >
+              {loadingDelete ? 'Memproses...' : 'Hapus Akun Saya'}
+            </button>
+          ) : (
+            <motion.form 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }}
+              onSubmit={handleDeleteConfirm}
+              className="auth-form"
+            >
+              <div className="input-group">
+                <label className="input-label" style={{ color: 'var(--danger)' }}>Masukkan OTP Hapus Akun</label>
+                <p style={{ fontSize: 11, color: 'var(--neutral-400)', marginBottom: 8 }}>
+                  Kode OTP telah dikirim ke nomor/email Anda. (Bisa gunakan 123456)
+                </p>
+                <div className="input-wrapper">
+                  <Lock size={16} className="input-icon" color="var(--danger)" />
+                  <input 
+                    className="input-field" 
+                    type="text" 
+                    value={deleteOTP} 
+                    onChange={e => setDeleteOTP(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    placeholder="Kode 6 digit" 
+                    required 
+                    maxLength={6}
+                    style={{ borderColor: 'var(--danger)' }}
+                  />
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                <button type="button" className="btn btn-outline" style={{ flex: 1 }} onClick={() => setShowDeleteOTP(false)}>Batal</button>
+                <button type="submit" className="btn" style={{ flex: 1, background: 'var(--danger)', color: '#fff' }} disabled={loadingDelete || deleteOTP.length < 4}>
+                  {loadingDelete ? 'Menghapus...' : 'Konfirmasi'}
+                </button>
+              </div>
+            </motion.form>
+          )}
+        </div>
+        <div style={{ height: 40 }} />
       </div>
     </div>
   )
