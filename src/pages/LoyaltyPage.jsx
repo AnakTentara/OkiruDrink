@@ -14,9 +14,10 @@ const benefits = [
 ]
 
 const levels = [
-  { name: 'Okiru Member', min: 0, icon: '🌱', color: '#9BC438' },
-  { name: 'Okiru VIP', min: 500, icon: '⭐', color: '#F5A623' },
-  { name: 'Okiru Elite', min: 2000, icon: '💎', color: '#6C8EBF' },
+  { name: 'Okiru Member', min: 0,    icon: '🌱', color: '#9BC438' },
+  { name: 'Silver Member', min: 500,  icon: '🥈', color: '#78909C' },
+  { name: 'Gold Member',   min: 2000, icon: '🥇', color: '#F9A825' },
+  { name: 'Diamond',       min: 5000, icon: '💎', color: '#26C6DA' },
 ]
 
 export default function LoyaltyPage() {
@@ -39,10 +40,10 @@ export default function LoyaltyPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <p className="lh-title">Poin OkiruDrink</p>
-          <p className="lh-points">{points}</p>
-          <p className="lh-label">Total Poin Terkumpul</p>
-          <span className="lh-level">{user?.level || 'Okiru Member'}</span>
+          <p className="lh-title" style={{ color: 'white' }}>Poin OkiruDrink</p>
+          <p className="lh-points" style={{ color: 'white' }}>{points}</p>
+          <p className="lh-label" style={{ color: 'white' }}>Total Poin Terkumpul</p>
+          <span className="lh-level" style={{ color: 'white' }}>{user?.level || 'Okiru Member'}</span>
         </motion.div>
 
         {/* Level Tiers */}

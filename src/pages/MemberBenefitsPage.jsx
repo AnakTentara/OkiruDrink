@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Check, ChevronRight, Crown, Star, Award, Gem } from 'lucide-react'
+import { ArrowLeft, ChevronRight, Crown, Star, Award, Gem } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore as useUser, ALL_LEVELS } from '../store/useUserStore'
 import './MemberBenefitsPage.css'
@@ -108,8 +108,12 @@ export default function MemberBenefitsPage() {
                 <div className="mb-lc-perks">
                   {level.perks.map((perk, j) => (
                     <div key={j} className="mb-perk">
-                      <Check size={14} color={isUnlocked ? level.color : 'var(--neutral-300)'} />
-                      <span style={{ color: isUnlocked ? 'var(--neutral-700)' : 'var(--neutral-400)' }}>{perk}</span>
+                      <span style={{ 
+                        fontSize: 13, 
+                        fontWeight: 500, 
+                        lineHeight: 1.4,
+                        color: isUnlocked ? 'var(--neutral-700)' : 'var(--neutral-400)'
+                      }}>{perk}</span>
                     </div>
                   ))}
                 </div>
