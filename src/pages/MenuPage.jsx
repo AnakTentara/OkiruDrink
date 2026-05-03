@@ -19,7 +19,7 @@ const categories = [
 const formatRp = (n) => `Rp ${n.toLocaleString('id-ID')}`
 
 const fetchProducts = async () => {
-  const res = await fetch('http://localhost:2027/api/products')
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/products`)
   const json = await res.json()
   if (!json.ok) throw new Error('Gagal mengambil data produk')
   return json.products

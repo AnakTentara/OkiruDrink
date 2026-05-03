@@ -165,7 +165,7 @@ export default function App() {
     const token = localStorage.getItem('okiru_token')
     if (token) {
       setLoading(true)
-      fetch('http://localhost:2027/api/users/me', {
+      fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => res.json())
