@@ -32,6 +32,11 @@ export const useCartStore = create((set, get) => ({
     })
   },
   clearCart: () => set({ items: [] }),
+  removeItem: (index) => set((state) => {
+    const newItems = [...state.items]
+    newItems.splice(index, 1)
+    return { items: newItems }
+  }),
   getCartTotal: () => get().items.reduce((acc, item) => acc + item.price * item.qty, 0),
   getCartCount: () => get().items.reduce((acc, item) => acc + item.qty, 0)
 }))
