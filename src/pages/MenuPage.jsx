@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
 import Header       from '../components/layout/Header'
 import BottomNav    from '../components/layout/BottomNav'
 import CartButton   from '../components/shared/CartButton'
 import ProductModal from '../components/shared/ProductModal'
-import Skeleton     from '../components/shared/Skeleton'
+import productsData from '../data/products.json'
 import './MenuPage.css'
 
 const categories = [
@@ -18,22 +17,12 @@ const categories = [
 
 const formatRp = (n) => `Rp ${n.toLocaleString('id-ID')}`
 
-const fetchProducts = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/products`)
-  const json = await res.json()
-  if (!json.ok) throw new Error('Gagal mengambil data produk')
-  return json.products
-}
-
 export default function MenuPage() {
   const [activeCat, setActiveCat] = useState('all')
   const [search, setSearch]       = useState('')
   const [selected, setSelected]   = useState(null)
 
-  const { data: products = [], isLoading, isError } = useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts
-  })
+  const products = productsData || []
 
   const filtered = products.filter(p => {
     const matchCat = activeCat === 'all' || p.category === activeCat
@@ -85,27 +74,6 @@ export default function MenuPage() {
 
         {/* Product Grid */}
         <div className="menu-grid px-16">
-          {isLoading ? (
-            // Skeleton Loading State
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="product-card" style={{ padding: 12 }}>
-                <Skeleton height="140px" borderRadius="12px" />
-                <div style={{ marginTop: 12 }}>
-                  <Skeleton height="16px" width="80%" style={{ marginBottom: 8 }} />
-                  <Skeleton height="12px" width="60%" style={{ marginBottom: 16 }} />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Skeleton height="16px" width="40%" />
-                    <Skeleton height="32px" width="32px" borderRadius="50%" />
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : isError ? (
-            <div className="menu-empty">
-              <span style={{ fontSize: 40 }}>⚠️</span>
-              <p style={{ color: 'var(--danger)', fontWeight: 600 }}>Gagal memuat produk.</p>
-            </div>
-          ) : (
             <AnimatePresence mode="popLayout">
               {filtered.length === 0 ? (
                 <motion.div
@@ -156,7 +124,6 @@ export default function MenuPage() {
                 ))
               )}
             </AnimatePresence>
-          )}
         </div>
 
         <div style={{ height: 24 }} />
