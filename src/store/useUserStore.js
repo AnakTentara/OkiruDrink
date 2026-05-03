@@ -16,7 +16,15 @@ export const useUserStore = create((set) => ({
   }),
   addPoints: (pts) => set((state) => {
     if (!state.user) return state
-    return { user: { ...state.user, points: (state.user.points || 0) + pts } }
+    const newPoints = (state.user.points || 0) + pts
+    let newLevel = state.user.level || 'Basic'
+    
+    // Evaluate new level (Silver at 500, Gold at 2000, Diamond at 5000)
+    if (newPoints >= 5000) newLevel = 'Diamond'
+    else if (newPoints >= 2000) newLevel = 'Gold'
+    else if (newPoints >= 500) newLevel = 'Silver'
+
+    return { user: { ...state.user, points: newPoints, level: newLevel } }
   }),
   useVoucher: () => {},
   verifyOTP: () => {},
