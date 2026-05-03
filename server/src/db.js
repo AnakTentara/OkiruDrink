@@ -46,9 +46,16 @@ async function testConnection() {
           price INT NOT NULL,
           category VARCHAR(50),
           image VARCHAR(255),
-          badge VARCHAR(50)
+          badge VARCHAR(50),
+          is_available TINYINT DEFAULT 1
         )
       `)
+      
+      // Auto-migrate is_available just in case table existed without it
+      try {
+        await conn.query('ALTER TABLE products ADD COLUMN is_available TINYINT DEFAULT 1')
+      } catch(e) {}
+
       const [prows] = await conn.query('SELECT COUNT(*) as count FROM products')
       if (prows[0].count === 0) {
         console.log('🌱 Seeding default products...')
@@ -60,7 +67,7 @@ async function testConnection() {
         ]
         for (const p of dummyProducts) {
           await conn.query(
-            'INSERT INTO products (name, description, price, category, image, badge) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO products (name, description, price, category, image, badge, is_available) VALUES (?, ?, ?, ?, ?, ?, 1)',
             [p.name, p.description, p.price, p.category, p.image, p.badge]
           )
         }

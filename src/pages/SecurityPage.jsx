@@ -55,8 +55,7 @@ export default function SecurityPage() {
       if (!json.ok) throw new Error(json.error)
       
       toast.success('Akun Anda berhasil dihapus.')
-      localStorage.removeItem('okiru_token')
-      useUser.getState().clearUser()
+      useUser.getState().logout()
       navigate('/login', { replace: true })
     } catch (err) {
       toast.error(err.message || 'Gagal menghapus akun')
