@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3, QrCode, Gift, Navigation, Info, Crown } from 'lucide-react'
+import { LogOut, Package, MapPin, Star, ChevronRight, Leaf, Shield, Award, Edit3, QrCode, Gift, Navigation, Info, Crown, MessageCircle, Headset } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import Header    from '../components/layout/Header'
 import BottomNav from '../components/layout/BottomNav'
 import { useUserStore as useUser, getLevelInfo } from '../store/useUserStore'
@@ -232,6 +233,36 @@ export default function ProfilePage() {
               <ChevronRight size={16} color="var(--neutral-400)" />
             </motion.button>
           ))}
+        </div>
+
+        {/* Customer Service */}
+        <div className="px-16" style={{ marginTop: 24, marginBottom: 16 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--neutral-500)', marginBottom: 12 }}>Bantuan & Dukungan</h3>
+          
+          <motion.div 
+            style={{ display: 'flex', gap: 12 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <motion.button
+              onClick={() => window.open('https://wa.me/6281234567890?text=Halo%20OkiruDrink,%20saya%20butuh%20bantuan', '_blank')}
+              whileTap={{ scale: 0.95 }}
+              style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 8px', background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: 'var(--radius-md)', cursor: 'pointer', color: '#2E7D32' }}
+            >
+              <MessageCircle size={24} />
+              <span style={{ fontSize: 12, fontWeight: 700 }}>WhatsApp CS</span>
+            </motion.button>
+            
+            <motion.button
+              onClick={() => toast('Fitur Live Chat Website akan segera hadir!', { icon: '💬' })}
+              whileTap={{ scale: 0.95 }}
+              style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 8px', background: 'var(--primary-xlight)', border: '1px solid rgba(155,196,56,0.3)', borderRadius: 'var(--radius-md)', cursor: 'pointer', color: 'var(--primary-dark)' }}
+            >
+              <Headset size={24} />
+              <span style={{ fontSize: 12, fontWeight: 700 }}>Live Chat Web</span>
+            </motion.button>
+          </motion.div>
         </div>
 
         {/* Logout */}
