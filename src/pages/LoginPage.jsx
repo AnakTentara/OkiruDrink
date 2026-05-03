@@ -43,7 +43,13 @@ export default function LoginPage() {
       navigate('/', { replace: true })
     },
     onError: (err) => {
-      toast.error(err.message || 'Login gagal. Coba lagi.')
+      if (err.message.includes('belum diverifikasi')) {
+        localStorage.setItem('okiru_pending_register', JSON.stringify({ email: form.email, phone: '' }))
+        toast.error('Silakan verifikasi OTP terlebih dahulu.')
+        navigate('/otp')
+      } else {
+        toast.error(err.message || 'Login gagal. Coba lagi.')
+      }
     }
   })
 

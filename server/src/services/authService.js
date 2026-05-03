@@ -44,6 +44,12 @@ exports.registerUser = async (data) => {
 
 exports.verifyOTP = async (data) => {
   const { phone, email, code } = data
+  
+  if (!phone && !email) {
+    const err = new Error('Data pengguna tidak lengkap. Harap ulangi pendaftaran/login.')
+    err.status = 400; throw err
+  }
+
   const queryField = phone ? 'phone' : 'email'
   const queryValue = phone ? phone : email.toLowerCase()
 
