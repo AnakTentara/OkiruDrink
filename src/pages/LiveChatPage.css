@@ -5,9 +5,11 @@
 .livechat-page {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   background: #F0F2F5;
   overflow: hidden;
+  z-index: 10;
 }
 
 /* ── Header ── */
