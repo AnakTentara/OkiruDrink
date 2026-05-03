@@ -55,9 +55,9 @@ export default function RedeemPointsPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <p style={{ fontSize: 13, opacity: 0.8, fontWeight: 600 }}>Poin Tersedia</p>
-          <p style={{ fontSize: 40, fontWeight: 800, margin: '4px 0' }}>{points}</p>
-          <p style={{ fontSize: 12, opacity: 0.7 }}>Tukarkan poinmu dengan hadiah menarik!</p>
+          <p style={{ fontSize: 13, opacity: 0.85, fontWeight: 600, color: '#fff' }}>Poin Tersedia</p>
+          <p style={{ fontSize: 48, fontWeight: 900, margin: '4px 0', color: '#fff', letterSpacing: '-2px' }}>{points}</p>
+          <p style={{ fontSize: 12, opacity: 0.8, color: '#fff' }}>Tukarkan poinmu dengan hadiah menarik! 🎁</p>
         </motion.div>
 
         {/* Rewards list */}
