@@ -128,13 +128,6 @@ export default function RegisterPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.12, duration: 0.45 }}
       >
-        {error && (
-          <motion.div className="error-banner" style={{ marginBottom: 14 }}
-            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-            {error}
-          </motion.div>
-        )}
-
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <label className="input-label">Nama Lengkap</label>
