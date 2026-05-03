@@ -44,8 +44,22 @@ export default function ProfilePage() {
 
   const orders = user?.orders || []
   const points = user?.points ?? 0
+  const qualifyingPoints = user?.qualifyingPoints ?? points // fallback to points
   const levelInfo = getLevelInfo(user?.level || 'Basic')
-  const levelProgress = levelInfo.nextMin ? Math.min(points / levelInfo.nextMin, 1) : 1
+  
+  // Calculate RPG-style progress
+  const currentLevelMin = levelInfo.minPoints
+  const nextLevelMin = levelInfo.nextMin
+  
+  let levelProgress = 1
+  let pointsForNext = 0
+  
+  if (nextLevelMin) {
+    const pointsInCurrentLevel = Math.max(0, points - currentLevelMin)
+    const pointsRequiredForNext = nextLevelMin - currentLevelMin
+    levelProgress = Math.min(pointsInCurrentLevel / pointsRequiredForNext, 1)
+    pointsForNext = Math.max(0, nextLevelMin - points)
+  }
 
   return (
     <>
@@ -102,7 +116,9 @@ export default function ProfilePage() {
               <Award size={16} color="var(--primary-dark)" />
               <span className="lp-title">Progress Level</span>
             </div>
-            <span className="lp-target">{points}/500 pts</span>
+            <span className="lp-target">
+              {nextLevelMin ? `${points}/${nextLevelMin} pts` : `${points} pts (Max)`}
+            </span>
           </div>
           <div className="lp-bar-track">
             <motion.div
@@ -113,11 +129,23 @@ export default function ProfilePage() {
             />
           </div>
           <p className="lp-hint">
-            {points >= 500
-              ? '🎉 Selamat! Kamu sudah Okiru VIP!'
-              : `${500 - points} pts lagi untuk naik ke Okiru VIP ✨`
+            {!nextLevelMin
+              ? '🎉 Selamat! Kamu sudah mencapai level tertinggi!'
+              : `${pointsForNext} pts lagi untuk naik ke ${levelInfo.nextLevel} ✨`
             }
           </p>
+
+          {/* Tier Retention Hint */}
+          {user?.level && user?.level !== 'Basic' && (
+            <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px dashed rgba(155,196,56,0.3)' }}>
+              <p style={{ fontSize: 11, color: 'var(--neutral-500)', lineHeight: 1.4 }}>
+                {qualifyingPoints >= currentLevelMin
+                  ? `🎉 Status ${levelInfo.label} aman hingga 31 Des ${new Date().getFullYear() + 1}!`
+                  : `⏳ Kumpulkan ${currentLevelMin - qualifyingPoints} pts lagi sebelum 31 Des ${new Date().getFullYear()} untuk bertahan di ${levelInfo.label}.`
+                }
+              </p>
+            </div>
+          )}
         </motion.div>
 
         {/* Stats */}
