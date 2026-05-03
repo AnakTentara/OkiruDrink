@@ -111,8 +111,8 @@ export default function MemberBenefitsPage() {
                       <span style={{ 
                         fontSize: 13, 
                         fontWeight: 500, 
-                        lineHeight: 1.4,
-                        color: isUnlocked ? 'var(--neutral-700)' : 'var(--neutral-400)'
+                        lineHeight: 1.5,
+                        color: isUnlocked ? 'var(--neutral-800)' : 'var(--neutral-400)'
                       }}>{perk}</span>
                     </div>
                   ))}

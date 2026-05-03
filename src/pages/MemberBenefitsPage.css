@@ -117,11 +117,13 @@
 .mb-lc-title-group h3 {
   font-size: 15px;
   font-weight: 800;
+  color: #fff !important;
 }
 .mb-lc-min {
   font-size: 11px;
   opacity: 0.85;
   font-weight: 600;
+  color: #fff !important;
 }
 .mb-lc-badge {
   position: absolute;
