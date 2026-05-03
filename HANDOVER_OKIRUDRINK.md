@@ -63,4 +63,28 @@ Aplikasi OkiruDrink saat ini telah berdiri dengan pondasi teknologi (Node.js/MyS
 3. **Dashboard Admin**: Menyelesaikan tampilan kontrol panel khusus Manajemen untuk melihat laporan laba harian, pesanan masuk, dan mengatur stok barang.
 
 ---
+
+## 6. Panduan Menjalankan Sistem (Tahap Produksi)
+Agar aplikasi dapat dinikmati oleh publik secara *live* tanpa kendala, sistem harus dijalankan dalam Mode Produksi (*Production Mode*). Berikut adalah panduan langkahnya:
+
+### A. Menjalankan Backend (Server & Database)
+Bagian ini mengatur logika, menyimpan pesanan, dan mengelola keamanan OTP.
+1. Buka terminal di server (VPS) perusahaan.
+2. Masuk ke folder backend: `cd /path/to/OkiruDrink/server`
+3. Nyalakan server secara permanen menggunakan PM2 (Process Manager):
+   ```bash
+   pm2 start src/index.js --name "okirudrink-backend"
+   ```
+*(Sistem akan otomatis mengonfigurasi database MySQL jika baru pertama kali dinyalakan).*
+
+### B. Menjalankan Frontend (Aplikasi Web Pembeli)
+Bagian ini adalah apa yang dilihat dan disentuh oleh pembeli di HP mereka. Kita harus melakukan *Build* (mengompres kode agar super cepat dimuat).
+1. Masuk ke folder utama aplikasi: `cd /path/to/OkiruDrink`
+2. Jalankan perintah kompresi:
+   ```bash
+   npm run build
+   ```
+3. Folder `dist` akan tercipta. Folder ini berisi *file* web yang sudah matang dan siap dipublikasikan (di-*hosting*) melalui Nginx, Apache, atau layanan seperti Vercel/Netlify.
+
+---
 *Dokumen ini bersifat rahasia (Confidential) dan diperuntukkan khusus bagi jajaran Manajemen Internal Proyek OkiruDrink.*
