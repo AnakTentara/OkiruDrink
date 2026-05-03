@@ -9,8 +9,15 @@ export const useUserStore = create((set) => ({
     localStorage.removeItem('okiru_token')
     set({ user: null })
   },
-  addOrder: () => {},
-  addPoints: () => {},
+  addOrder: (order) => set((state) => {
+    if (!state.user) return state
+    const newOrder = { ...order, date: new Date().toISOString() }
+    return { user: { ...state.user, orders: [newOrder, ...(state.user.orders || [])] } }
+  }),
+  addPoints: (pts) => set((state) => {
+    if (!state.user) return state
+    return { user: { ...state.user, points: (state.user.points || 0) + pts } }
+  }),
   useVoucher: () => {},
   verifyOTP: () => {},
   addStamp: () => {}

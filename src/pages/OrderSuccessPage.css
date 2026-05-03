@@ -1,10 +1,9 @@
 .success-page {
   min-height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   background: linear-gradient(160deg, #F0F9DC 0%, #FFFFFF 70%);
-  padding: 24px;
+  padding: 40px 24px;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
@@ -28,6 +27,7 @@
   gap: 20px;
   width: 100%;
   max-width: 380px;
+  margin: auto;
   position: relative;
   z-index: 1;
 }
