@@ -109,7 +109,7 @@ export default function LiveChatPage() {
         </div>
         <button
           className="lc-call-btn"
-          onClick={() => window.open('https://wa.me/6281234567890', '_blank')}
+          onClick={() => window.open('https://wa.me/62895604910792', '_blank')}
           title="Hubungi via WhatsApp"
         >
           <Phone size={18} />

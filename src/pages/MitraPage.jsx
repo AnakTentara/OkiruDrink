@@ -143,7 +143,7 @@ export default function MitraPage() {
 
         {/* CTA */}
         <motion.button
-          onClick={() => window.open('https://wa.me/6281234567890?text=Halo%20OkiruDrink,%20saya%20tertarik%20menjadi%20Mitra%20dan%20ingin%20tahu%20lebih%20lanjut', '_blank')}
+          onClick={() => window.open('https://wa.me/62895604910792?text=Halo%20OkiruDrink,%20saya%20tertarik%20menjadi%20Mitra%20dan%20ingin%20tahu%20lebih%20lanjut', '_blank')}
           whileTap={{ scale: 0.97 }}
           style={{ width: '100%', padding: '16px', background: 'linear-gradient(135deg, #2E7D32, #66BB6A)', border: 'none', borderRadius: 'var(--radius-md)', color: '#fff', fontSize: 15, fontWeight: 800, cursor: 'pointer', fontFamily: 'var(--font)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 8px 24px rgba(46,125,50,0.3)', marginBottom: 8 }}
           initial={{ opacity: 0, y: 16 }}

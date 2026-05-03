@@ -246,7 +246,7 @@ export default function ProfilePage() {
             transition={{ delay: 0.4 }}
           >
             <motion.button
-              onClick={() => window.open('https://wa.me/6281234567890?text=Halo%20OkiruDrink,%20saya%20butuh%20bantuan', '_blank')}
+              onClick={() => window.open('https://wa.me/62895604910792?text=Halo%20OkiruDrink,%20saya%20butuh%20bantuan', '_blank')}
               whileTap={{ scale: 0.95 }}
               style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 8px', background: '#E8F5E9', border: '1px solid #C8E6C9', borderRadius: 'var(--radius-md)', cursor: 'pointer', color: '#2E7D32' }}
             >
