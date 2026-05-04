@@ -13,6 +13,7 @@ import { Toaster } from 'react-hot-toast'
 import { useUserStore } from './store/useUserStore'
 
 import LandingPage      from './pages/LandingPage'
+import SplashScreen     from './components/shared/SplashScreen'
 import LoginPage        from './pages/LoginPage'
 import RegisterPage     from './pages/RegisterPage'
 import OTPPage          from './pages/OTPPage'
