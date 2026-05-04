@@ -40,7 +40,7 @@ function AnimatedCounter({ value, suffix = '' }) {
 }
 
 export default function ProfilePage() {
-  const { user } = useUser()
+  const { user, loading } = useUser()
   const navigate = useNavigate()
 
   const orders = user?.orders || []
@@ -80,11 +80,15 @@ export default function ProfilePage() {
             onClick={() => navigate('/edit-profile')}
             style={{ cursor: 'pointer' }}
           >
-            {(user?.name?.[0] || 'O').toUpperCase()}
+            {loading ? <span className="skeleton skeleton-avatar" style={{ background: 'rgba(255,255,255,0.3)' }} /> : (user?.name?.[0] || 'O').toUpperCase()}
           </motion.div>
           <div className="profile-info">
-            <h2 className="profile-name">{user?.name || 'Pengguna'}</h2>
-            <p className="profile-email">{user?.email || ''}</p>
+            <h2 className="profile-name">
+              {loading ? <span className="skeleton skeleton-title" style={{ background: 'rgba(255,255,255,0.3)', width: 120, display: 'inline-block' }} /> : (user?.name || 'Pengguna')}
+            </h2>
+            <p className="profile-email">
+              {loading ? <span className="skeleton skeleton-text" style={{ background: 'rgba(255,255,255,0.3)', width: 160, display: 'inline-block' }} /> : (user?.email || '')}
+            </p>
             <div className="profile-level" onClick={() => navigate('/member-benefits')} style={{ cursor: 'pointer' }}>
               <span>{levelInfo.icon}</span>
               {levelInfo.label}

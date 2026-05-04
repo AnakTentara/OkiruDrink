@@ -119,6 +119,16 @@ function AuthRoute({ children }) {
   return children
 }
 
+// ── Admin Route ──
+function AdminRoute({ children }) {
+  const { user, loading } = useUserStore()
+  if (loading) return null
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/home" replace />
+  }
+  return children
+}
+
 // ── Animated routes wrapper ──
 function AnimatedRoutes() {
   const location = useLocation()

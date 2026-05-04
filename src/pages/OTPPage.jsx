@@ -76,8 +76,7 @@ export default function OTPPage() {
       localStorage.removeItem('okiru_pending_register')
       
       // Update global user store
-      const { useUserStore } = await import('../store/useUserStore')
-      useUserStore.getState().setUser(json.user)
+      useUser.getState().setUser(json.user)
       
       navigate('/', { replace: true })
     } catch (err) {

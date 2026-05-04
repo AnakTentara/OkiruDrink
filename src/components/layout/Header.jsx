@@ -77,7 +77,7 @@ export default function Header() {
             <span className="header-brand-name">OkiruDrink</span>
             <span className="header-level">
               <span className="level-dot" />
-              {user?.level || 'Okiru Member'}
+              {user ? (user.level || 'Okiru Member') : <span className="skeleton skeleton-text" style={{ width: 60, display: 'inline-block' }} />}
             </span>
           </div>
         </button>
@@ -94,7 +94,9 @@ export default function Header() {
           {(!isHome || scrolled) && (
             <div className="header-points">
               <span className="points-icon">🌟</span>
-              <span className="points-val">{user?.points ?? 0} pts</span>
+              <span className="points-val">
+                {user ? `${user.points ?? 0} pts` : <span className="skeleton skeleton-text" style={{ width: 40, display: 'inline-block' }} />}
+              </span>
             </div>
           )}
           <button className="header-qr" aria-label="Scan QR" onClick={() => navigate('/qr-code')}>
@@ -108,14 +110,16 @@ export default function Header() {
           <div className="greeting-text-wrap">
             <p className="greeting-sub">{greeting.text} {greeting.emoji}</p>
             <h1 className="greeting-name">
-              {user?.name?.split(' ')[0] || 'Sahabat'} <span className="greeting-wave">👋</span>
+              {user ? (user.name?.split(' ')[0] || 'Sahabat') : <span className="skeleton skeleton-text" style={{ width: 100, display: 'inline-block', height: 28 }} />} <span className="greeting-wave">👋</span>
             </h1>
             <p className="greeting-tagline">Mau minum apa hari ini?</p>
           </div>
           <div className="greeting-badge">
             <span className="greeting-pts-icon">🌟</span>
             <div>
-              <p className="greeting-pts-val">{user?.points ?? 0}</p>
+              <p className="greeting-pts-val">
+                {user ? (user.points ?? 0) : <span className="skeleton skeleton-text" style={{ width: 30, display: 'inline-block' }} />}
+              </p>
               <p className="greeting-pts-label">points</p>
             </div>
           </div>
