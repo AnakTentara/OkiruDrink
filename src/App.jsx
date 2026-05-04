@@ -199,118 +199,139 @@ export default function App() {
               borderRadius: '99px'
             }
           }} />
-          {/* Splash Screen */}
+          {/* Splash Screen — only on app routes */}
           <AnimatePresence>
             {!splashDone && <SplashScreen key="splash" onFinish={handleSplashFinish} />}
           </AnimatePresence>
 
-          {/* ── Desktop Wrapper: branded background + phone frame ── */}
-          {splashDone && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="desktop-wrapper">
-                {/* Left branding panel — only visible on desktop */}
-                <div className="desktop-branding">
-                  <div className="db-content">
-                    <div className="db-logo-group">
-                      <img src="/logo.jpg" alt="OkiruDrink" className="db-logo-img" />
-                      <div>
-                        <h1 className="db-brand-name">OkiruDrink</h1>
-                        <p className="db-tagline">Healthy but Tasty 🌿</p>
-                      </div>
-                    </div>
-
-                    <div className="db-description">
-                      <div className="db-divider" />
-                      <h2 className="db-headline">
-                        Rasakan<br />
-                        <span>Kesegaran Nyata.</span>
-                      </h2>
-                      <p className="db-sub">
-                        Dibuat dari ekstrak <strong>Daun Plectranthus amboinicus</strong> (Torbangun) pilihan 
-                        dan manis alami <strong>Stevia</strong>. Nikmati pengalaman terbaik OkiruDrink 
-                        dengan membuka website ini langsung di perangkat handphone-mu! 📱✨
-                      </p>
-                    </div>
-
-                    <div className="db-features">
-                      <div className="db-feature">
-                        <span className="db-feature-icon">🍃</span>
-                        <div>
-                          <p className="db-feature-title">100% Bahan Alami</p>
-                          <p className="db-feature-sub">Plectranthus amboinicus & Stevia</p>
-                        </div>
-                      </div>
-                      <div className="db-feature">
-                        <span className="db-feature-icon">🫀</span>
-                        <div>
-                          <p className="db-feature-title">Kaya Manfaat</p>
-                          <p className="db-feature-sub">Baik untuk pencernaan & daya tahan tubuh</p>
-                        </div>
-                      </div>
-                      <div className="db-feature">
-                        <span className="db-feature-icon">⚡</span>
-                        <div>
-                          <p className="db-feature-title">Mobile First Experience</p>
-                          <p className="db-feature-sub">Buka di HP untuk pengalaman optimal</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="db-cta-row">
-                      <span className="db-cta-badge">🌿 Halal & Aman</span>
-                      <span className="db-cta-badge">✓ BPOM Terdaftar</span>
-                      <span className="db-cta-badge">📦 200ml / Botol</span>
-                    </div>
-
-                    <p className="db-footer">© 2026 OkiruDrink — Muara Enim, Sumatera Selatan</p>
-                  </div>
-                </div>
-
-                {/* Phone Frame */}
-                <div className="phone-frame-wrapper">
-                  <div className="phone-frame">
-                    <div className="phone-notch">
-                      <div className="phone-notch-inner">
-                        <div className="phone-camera" />
-                        <div className="phone-speaker" />
-                      </div>
-                    </div>
-
-                    <div className="app-shell">
-                      <div className="chrome-browser-ui">
-                        <div className="chrome-status-bar">
-                          <span>9:41</span>
-                          <div className="status-icons">
-                            <span style={{ fontSize: 10 }}>5G</span>
-                            <div className="battery-icon" />
-                          </div>
-                        </div>
-                        <div className="chrome-nav-bar">
-                          <div className="chrome-url-box">
-                            <span className="lock-icon">🔒</span>
-                            <span className="chrome-url">okirudrink.com</span>
-                          </div>
-                          <span className="chrome-dots">⋮</span>
-                        </div>
-                      </div>
-                      <div className="browser-viewport">
-                        <AnimatedRoutes />
-                      </div>
-                    </div>
-
-                    <div className="phone-home-indicator">
-                      <div className="phone-home-bar" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
+          {splashDone && <AppContent />}
       </BrowserRouter>
     </QueryClientProvider>
   )
 }
+
+// Separated so we can use useLocation inside Router context
+function AppContent() {
+  const location = useLocation()
+  const isLanding = location.pathname === '/'
+
+  if (isLanding) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        style={{ minHeight: '100dvh' }}
+      >
+        <AnimatedRoutes />
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="desktop-wrapper">
+        {/* Left branding panel — only visible on desktop */}
+        <div className="desktop-branding">
+          <div className="db-content">
+            <div className="db-logo-group">
+              <img src="/logo.jpg" alt="OkiruDrink" className="db-logo-img" />
+              <div>
+                <h1 className="db-brand-name">OkiruDrink</h1>
+                <p className="db-tagline">Healthy but Tasty 🌿</p>
+              </div>
+            </div>
+
+            <div className="db-description">
+              <div className="db-divider" />
+              <h2 className="db-headline">
+                Rasakan<br />
+                <span>Kesegaran Nyata.</span>
+              </h2>
+              <p className="db-sub">
+                Dibuat dari ekstrak <strong>Daun Plectranthus amboinicus</strong> (Torbangun) pilihan 
+                dan manis alami <strong>Stevia</strong>. Nikmati pengalaman terbaik OkiruDrink 
+                dengan membuka website ini langsung di perangkat handphone-mu! 📱✨
+              </p>
+            </div>
+
+            <div className="db-features">
+              <div className="db-feature">
+                <span className="db-feature-icon">🍃</span>
+                <div>
+                  <p className="db-feature-title">100% Bahan Alami</p>
+                  <p className="db-feature-sub">Plectranthus amboinicus & Stevia</p>
+                </div>
+              </div>
+              <div className="db-feature">
+                <span className="db-feature-icon">🫀</span>
+                <div>
+                  <p className="db-feature-title">Kaya Manfaat</p>
+                  <p className="db-feature-sub">Baik untuk pencernaan & daya tahan tubuh</p>
+                </div>
+              </div>
+              <div className="db-feature">
+                <span className="db-feature-icon">⚡</span>
+                <div>
+                  <p className="db-feature-title">Mobile First Experience</p>
+                  <p className="db-feature-sub">Buka di HP untuk pengalaman optimal</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="db-cta-row">
+              <span className="db-cta-badge">🌿 Halal & Aman</span>
+              <span className="db-cta-badge">✓ BPOM Terdaftar</span>
+              <span className="db-cta-badge">📦 250ml / Botol</span>
+            </div>
+
+            <p className="db-footer">© 2026 OkiruDrink — Muara Enim, Sumatera Selatan</p>
+          </div>
+        </div>
+
+        {/* Phone Frame */}
+        <div className="phone-frame-wrapper">
+          <div className="phone-frame">
+            <div className="phone-notch">
+              <div className="phone-notch-inner">
+                <div className="phone-camera" />
+                <div className="phone-speaker" />
+              </div>
+            </div>
+
+            <div className="app-shell">
+              <div className="chrome-browser-ui">
+                <div className="chrome-status-bar">
+                  <span>9:41</span>
+                  <div className="status-icons">
+                    <span style={{ fontSize: 10 }}>5G</span>
+                    <div className="battery-icon" />
+                  </div>
+                </div>
+                <div className="chrome-nav-bar">
+                  <div className="chrome-url-box">
+                    <span className="lock-icon">🔒</span>
+                    <span className="chrome-url">okirudrink.com</span>
+                  </div>
+                  <span className="chrome-dots">⋮</span>
+                </div>
+              </div>
+              <div className="browser-viewport">
+                <AnimatedRoutes />
+              </div>
+            </div>
+
+            <div className="phone-home-indicator">
+              <div className="phone-home-bar" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
