@@ -12,7 +12,7 @@ import { Toaster } from 'react-hot-toast'
 
 import { useUserStore } from './store/useUserStore'
 
-import SplashScreen     from './components/shared/SplashScreen'
+import LandingPage      from './pages/LandingPage'
 import LoginPage        from './pages/LoginPage'
 import RegisterPage     from './pages/RegisterPage'
 import OTPPage          from './pages/OTPPage'
@@ -114,7 +114,7 @@ function Protected({ children }) {
 function AuthRoute({ children }) {
   const { user, loading } = useUserStore()
   if (loading) return null
-  if (user) return <Navigate to="/" replace />
+  if (user) return <Navigate to="/home" replace />
   return children
 }
 
@@ -125,13 +125,16 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        {/* Public */}
+        <Route path="/"        element={<PageWrap><LandingPage /></PageWrap>} />
+
         {/* Auth */}
         <Route path="/login"    element={<AuthRoute><PageWrap><LoginPage /></PageWrap></AuthRoute>} />
         <Route path="/register" element={<AuthRoute><PageWrap><RegisterPage /></PageWrap></AuthRoute>} />
         <Route path="/otp"      element={<PageWrap><OTPPage /></PageWrap>} />
 
         {/* Main */}
-        <Route path="/"              element={<Protected><PageWrap><HomePage /></PageWrap></Protected>} />
+        <Route path="/home"         element={<Protected><PageWrap><HomePage /></PageWrap></Protected>} />
         <Route path="/menu"          element={<Protected><PageWrap><MenuPage /></PageWrap></Protected>} />
         <Route path="/voucher"       element={<Protected><PageWrap><VoucherPage /></PageWrap></Protected>} />
         <Route path="/profil"        element={<Protected><PageWrap><ProfilePage /></PageWrap></Protected>} />

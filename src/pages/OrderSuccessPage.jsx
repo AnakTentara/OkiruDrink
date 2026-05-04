@@ -170,7 +170,7 @@ export default function OrderSuccessPage() {
           <motion.button
             id="back-home"
             className="btn btn-primary btn-full btn-lg"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/home')}
             whileTap={{ scale: 0.97 }}
           >
             <Home size={18} /> Kembali ke Beranda

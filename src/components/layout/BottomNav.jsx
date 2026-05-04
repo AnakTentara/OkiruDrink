@@ -5,7 +5,7 @@ import { Home, Coffee, Ticket, User } from 'lucide-react'
 import './BottomNav.css'
 
 const navItems = [
-  { path: '/',        icon: Home,   label: 'Beranda' },
+  { path: '/home',   icon: Home,   label: 'Beranda' },
   { path: '/menu',    icon: Coffee, label: 'Menu' },
   { path: '/voucher', icon: Ticket, label: 'Voucher' },
   { path: '/profil',  icon: User,   label: 'Profil' }

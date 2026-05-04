@@ -22,7 +22,7 @@ export default function Header() {
   const location   = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const headerRef  = useRef(null)
-  const isHome     = location.pathname === '/'
+  const isHome     = location.pathname === '/home'
 
   useEffect(() => {
     const pageEl   = document.querySelector('.page-content')
@@ -71,7 +71,7 @@ export default function Header() {
     >
       <div className="header-top-row">
         {/* Left: Logo + level */}
-        <button className="header-brand" onClick={() => navigate('/')}>
+        <button className="header-brand" onClick={() => navigate('/home')}>
           <img src="/logo.jpg" alt="OkiruDrink" className="header-logo-img" />
           <div className="header-brand-text">
             <span className="header-brand-name">OkiruDrink</span>
